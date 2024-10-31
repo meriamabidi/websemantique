@@ -58,7 +58,7 @@ public class CompanyService {
                         : companyUri.substring(companyUri.lastIndexOf('/') + 1);
 
                 Company company = companyMap.getOrDefault(companyUri, new Company());
-                company.setId(Long.parseLong(idValue)); // Assuming ID is numeric
+                company.setId(idValue); // Assuming ID is numeric
 
                 if (soln.contains("nom")) {
                     company.setNom(soln.get("nom").toString());
@@ -103,7 +103,7 @@ public class CompanyService {
 
     public void save(Company company) {
         String generatedId = UUID.randomUUID().toString();
-        company.setId(Long.valueOf(generatedId)); // Update this line based on how you want to manage IDs
+        company.setId(generatedId); // Update this line based on how you want to manage IDs
 
         Resource companyClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Company");
         Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, companyClass);
@@ -126,7 +126,7 @@ public class CompanyService {
 
     private Company mapIndividualToCompany(Individual ind) {
         Company company = new Company();
-        company.setId(Long.parseLong(ind.getLocalName()));
+        company.setId(ind.getLocalName());
         company.setNom(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom")).toString());
         company.setAdresse(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#adresse")).toString());
         company.setContact(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#contact")).toString());
