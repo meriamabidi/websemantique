@@ -1,5 +1,9 @@
 package org.example.service;
 
+import org.apache.jena.update.UpdateExecution;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.example.model.Fournisseur;
 import org.springframework.stereotype.Service;
 import org.apache.jena.ontology.Individual;
@@ -102,14 +106,27 @@ public class FournisseurService {
         String generatedId = UUID.randomUUID().toString();
         fournisseur.setId(generatedId);
 
-        Resource fournisseurClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Fournisseur_de_Dechet");
-        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, fournisseurClass);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ns: <%s> " +
+                        "INSERT DATA { " +
+                        "    ns:%s a ns:Fournisseur ; " +
+                        "        ns:nom \"%s\" ; " +
+                        "        ns:adresse \"%s\" ; " +
+                        "        ns:contact \"%s\" . " +
+                        "}",
+                baseUri, generatedId, fournisseur.getNom(), fournisseur.getAdresse(), fournisseur.getContact()
+        );
 
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"), fournisseur.getNom());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#adresse"), fournisseur.getAdresse());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#contact"), fournisseur.getContact());
-
-        saveRdfModel();
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            Dataset dataset = DatasetFactory.create(ontModel);
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, dataset);
+            qexec.execute();
+            saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error saving CollectDechet: ", e);
+        }
     }
 
     // Update existing Fournisseur
@@ -130,17 +147,60 @@ public class FournisseurService {
 
     // Find Fournisseur by ID
     public Optional<Fournisseur> findById(String id) {
-        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        return Optional.ofNullable(ind != null ? mapIndividualToFournisseur(ind) : null);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlQuery = String.format(
+                "PREFIX ex: <%s> " +
+                        "SELECT ?nom ?adresse ?contact WHERE { " +
+                        "    ex:%s a ex:Fournisseur_de_Dechet . " +
+                        "    OPTIONAL { ex:%s ex:nom ?nom . } " +
+                        "    OPTIONAL { ex:%s ex:adresse ?adresse . } " +
+                        "    OPTIONAL { ex:%s ex:contact ?contact . } " +
+                        "}",
+                baseUri, id, id, id, id
+        );
+
+        Query query = QueryFactory.create(sparqlQuery);
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, ontModel)) {
+            ResultSet results = qexec.execSelect();
+            if (results.hasNext()) {
+                QuerySolution solution = results.nextSolution();
+                Fournisseur fournisseur = new Fournisseur();
+                fournisseur.setId(id);
+                if (solution.contains("nom")) {
+                    fournisseur.setNom(solution.getLiteral("nom").getString());
+                }
+                if (solution.contains("adresse")) {
+                    fournisseur.setAdresse(solution.getLiteral("adresse").getString());
+                }
+                if (solution.contains("contact")) {
+                    fournisseur.setContact(solution.getLiteral("contact").getString());
+                }
+                return Optional.of(fournisseur);
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving Fournisseur by ID: ", e);
+        }
+        return Optional.empty();
     }
 
     // Delete Fournisseur by ID
     public void deleteById(String id) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        if (individual != null) {
-            ontModel.removeAll(individual, null, null);
-            ontModel.removeAll(null, null, individual);
-            saveRdfModel();
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ex: <%s> " +
+                        "DELETE WHERE { " +
+                        "    ex:%s ?p ?o . " +
+                        "    ?s ?p2 ex:%s . " +
+                        "}",
+                baseUri, id, id
+        );
+
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, (Dataset) ontModel);
+            qexec.execute();
+        } catch (Exception e) {
+            logger.error("Error deleting CollectDechet by ID: ", e);
         }
     }
 

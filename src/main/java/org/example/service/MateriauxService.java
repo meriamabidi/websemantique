@@ -1,4 +1,8 @@
 package org.example.service;
+import org.apache.jena.update.UpdateExecution;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.example.model.Materiaux;
 import org.springframework.stereotype.Service;
 import org.apache.jena.ontology.Individual;
@@ -39,7 +43,7 @@ public class MateriauxService {
 
         String sparqlQueryString = """
         PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
-        SELECT ?Materiaux_Recycles ?type ?poids ?nom ?description ?categorie WHERE {
+        SELECT ?materiaux ?type ?poids ?nom ?description ?categorie WHERE {
             ?materiaux a ns:Materiaux_Recycles .
             OPTIONAL { ?materiaux ns:type ?type . }
             OPTIONAL { ?materiaux ns:poids ?poids . }
@@ -91,24 +95,77 @@ public class MateriauxService {
     }
 
     public Optional<Materiaux> findById(String id) {
-        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        return Optional.ofNullable(ind != null ? mapIndividualToMateriaux(ind) : null);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlQuery = String.format(
+                "PREFIX ex: <%s> " +
+                        "SELECT ?type ?poids ?nom ?description ?categorie WHERE { " +
+                        "    ex:%s a ex:Materiaux_Recycles . " +
+                        "    OPTIONAL { ex:%s ex:type ?type . } " +
+                        "    OPTIONAL { ex:%s ex:poids ?poids . } " +
+                        "    OPTIONAL { ex:%s ex:nom ?nom . } " +
+                        "    OPTIONAL { ex:%s ex:description ?description . } " +
+                        "    OPTIONAL { ex:%s ex:categorie ?categorie . } " +
+                        "}",
+                baseUri, id, id, id, id, id, id
+        );
+
+        Query query = QueryFactory.create(sparqlQuery);
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, ontModel)) {
+            ResultSet results = qexec.execSelect();
+            if (results.hasNext()) {
+                QuerySolution solution = results.nextSolution();
+                Materiaux materiaux = new Materiaux();
+                materiaux.setId(id);
+                if (solution.contains("type")) {
+                    materiaux.setType(solution.getLiteral("type").getString());
+                }
+                if (solution.contains("poids")) {
+                    materiaux.setPoids(solution.getLiteral("poids").getDouble());
+                }
+                if (solution.contains("nom")) {
+                    materiaux.setNom(solution.getLiteral("nom").getString());
+                }
+                if (solution.contains("description")) {
+                    materiaux.setDescription(solution.getLiteral("description").getString());
+                }
+                if (solution.contains("categorie")) {
+                    materiaux.setCategorie(solution.getLiteral("categorie").getString());
+                }
+                return Optional.of(materiaux);
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving Materiaux by ID: ", e);
+        }
+        return Optional.empty();
     }
 
     public void save(Materiaux materiaux) {
         String generatedId = UUID.randomUUID().toString();
         materiaux.setId(generatedId);
 
-        Resource materiauxClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles");
-        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, materiauxClass);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ns: <%s> " +
+                        "INSERT DATA { " +
+                        "    ns:%s a ns:Materiaux_Recycles ; " +
+                        "        ns:type \"%s\" ; " +
+                        "        ns:poids \"%s\"^^<http://www.w3.org/2001/XMLSchema#double> ; " +
+                        "        ns:nom \"%s\" ; " +
+                        "        ns:description \"%s\" ; " +
+                        "        ns:categorie \"%s\" . " +
+                        "}",
+                baseUri, generatedId, materiaux.getType(), materiaux.getPoids(), materiaux.getNom(), materiaux.getDescription(), materiaux.getCategorie()
+        );
 
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type"), materiaux.getType());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#poids"), String.valueOf(materiaux.getPoids()));
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"), materiaux.getNom());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description"), materiaux.getDescription());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#categorie"), materiaux.getCategorie());
-
-        saveRdfModel();
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            Dataset dataset = DatasetFactory.create(ontModel);
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, dataset);
+            qexec.execute();
+            saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error saving CollectDechet: ", e);
+        }
     }
 
     public void update(Materiaux materiaux) {
@@ -131,11 +188,22 @@ public class MateriauxService {
     }
 
     public void deleteById(String id) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        if (individual != null) {
-            ontModel.removeAll(individual, null, null);
-            ontModel.removeAll(null, null, individual);
-            saveRdfModel();
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ex: <%s> " +
+                        "DELETE WHERE { " +
+                        "    ex:%s ?p ?o . " +
+                        "    ?s ?p2 ex:%s . " +
+                        "}",
+                baseUri, id, id
+        );
+
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, (Dataset) ontModel);
+            qexec.execute();
+        } catch (Exception e) {
+            logger.error("Error deleting CollectDechet by ID: ", e);
         }
     }
 private Materiaux mapIndividualToMateriaux(Individual ind) {

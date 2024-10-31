@@ -6,6 +6,10 @@ import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.update.UpdateExecution;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.util.FileManager;
 import org.example.model.CollectDechet;
 import org.slf4j.Logger;
@@ -107,33 +111,93 @@ public class CollectDechetService {
     }
 
     public Optional<CollectDechet> findById(String id) {
-        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        return Optional.ofNullable(ind != null ? mapIndividualToCollecte(ind) : null);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlQuery = String.format(
+                "PREFIX ex: <%s> " +
+                        "SELECT ?quantite ?etat ?date ?lieu WHERE { " +
+                        "    ex:%s a ex:collecte_dechet . " +
+                        "    OPTIONAL { ex:%s ex:quantite ?quantite . } " +
+                        "    OPTIONAL { ex:%s ex:etat ?etat . } " +
+                        "    OPTIONAL { ex:%s ex:date ?date . } " +
+                        "    OPTIONAL { ex:%s ex:lieu ?lieu . } " +
+                        "}",
+                baseUri, id, id, id, id, id
+        );
+
+        Query query = QueryFactory.create(sparqlQuery);
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, ontModel)) {
+            ResultSet results = qexec.execSelect();
+            if (results.hasNext()) {
+                QuerySolution solution = results.nextSolution();
+                CollectDechet collecte = new CollectDechet();
+                collecte.setId(id);
+                if (solution.contains("quantite")) {
+                    collecte.setQuantite(solution.getLiteral("quantite").getDouble());
+                }
+                if (solution.contains("etat")) {
+                    collecte.setEtat(solution.getLiteral("etat").getString());
+                }
+                if (solution.contains("date")) {
+                    collecte.setDate(solution.getLiteral("date").getString());
+                }
+                if (solution.contains("lieu")) {
+                    collecte.setLieu(solution.getLiteral("lieu").getString());
+                }
+                return Optional.of(collecte);
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving CollectDechet by ID: ", e);
+        }
+        return Optional.empty();
     }
 
     public void save(CollectDechet collecte) {
         String generatedId = UUID.randomUUID().toString();
         collecte.setId(generatedId); // Update this line based on how you want to manage IDs
 
-        Resource collecteClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#collecte_dechet");
-        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, collecteClass);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ex: <%s> " +
+                        "INSERT DATA { " +
+                        "    ex:%s a ex:collecte_dechet ; " +
+                        "        ex:quantite \"%s\"^^<http://www.w3.org/2001/XMLSchema#double> ; " +
+                        "        ex:etat \"%s\" ; " +
+                        "        ex:date \"%s\" ; " +
+                        "        ex:lieu \"%s\" . " +
+                        "}",
+                baseUri, generatedId, collecte.getQuantite(), collecte.getEtat(), collecte.getDate(), collecte.getLieu()
+        );
 
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite"), String.valueOf(collecte.getQuantite()));
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#etat"), collecte.getEtat());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date"), collecte.getDate().toString());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#lieu"), collecte.getLieu());
-
-        saveRdfModel();
-    }
-
-    public void deleteById(String id) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        if (individual != null) {
-            ontModel.removeAll(individual, null, null);
-            ontModel.removeAll(null, null, individual);
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            Dataset dataset = DatasetFactory.create(ontModel);
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, dataset);
+            qexec.execute();
             saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error saving CollectDechet: ", e);
         }
     }
+    public void deleteById(String id) {
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ex: <%s> " +
+                        "DELETE WHERE { " +
+                        "    ex:%s ?p ?o . " +
+                        "    ?s ?p2 ex:%s . " +
+                        "}",
+                baseUri, id, id
+        );
+
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, (Dataset) ontModel);
+            qexec.execute();
+        } catch (Exception e) {
+            logger.error("Error deleting CollectDechet by ID: ", e);
+        }
+    }
+
 
     private CollectDechet mapIndividualToCollecte(Individual ind) {
         CollectDechet collecte = new CollectDechet();

@@ -5,6 +5,10 @@ import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.update.UpdateExecution;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.util.FileManager;
 import org.example.model.CentreRecyclage;
 import org.slf4j.Logger;
@@ -127,31 +131,84 @@ public class CentreRecyclageService {
         }
     }
 
-    public Optional<CentreRecyclage> findById(String id) { // Changed to String
-        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        return Optional.ofNullable(ind != null ? mapIndividualToCentre(ind) : null);
+    public Optional<CentreRecyclage> findById(String id) {
+        String sparqlQueryString = String.format("""
+        PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
+        SELECT ?capacite ?localisation ?nom WHERE {
+            ns:%s a ns:Centre_de_Recyclage .
+            OPTIONAL { ns:%s ns:capacite ?capacite . }
+            OPTIONAL { ns:%s ns:localisation ?localisation . }
+            OPTIONAL { ns:%s ns:nom ?nom . }
+        }
+        """, id, id, id, id);
+
+        Query query = QueryFactory.create(sparqlQueryString);
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, ontModel)) {
+            ResultSet results = qexec.execSelect();
+            if (results.hasNext()) {
+                QuerySolution soln = results.nextSolution();
+                CentreRecyclage centre = new CentreRecyclage();
+                centre.setId(id);
+                if (soln.contains("capacite")) {
+                    centre.setCapacite(soln.get("capacite").asLiteral().getInt());
+                }
+                if (soln.contains("localisation")) {
+                    centre.setLocalisation(soln.get("localisation").toString());
+                }
+                if (soln.contains("nom")) {
+                    centre.setNom(soln.get("nom").toString());
+                }
+                return Optional.of(centre);
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving centre by ID: ", e);
+        }
+        return Optional.empty();
     }
 
     public void save(CentreRecyclage centre) {
         String generatedId = UUID.randomUUID().toString();
-        centre.setId(generatedId); // Now set ID as String
+        centre.setId(generatedId); // Set the generated ID
 
-        Resource centreClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_de_Recyclage");
-        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, centreClass);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ns: <%s> " +
+                        "INSERT DATA { " +
+                        "    ns:%s a ns:Centre_de_Recyclage ; " +
+                        "        ns:capacite \"%s\"^^<http://www.w3.org/2001/XMLSchema#int> ; " +
+                        "        ns:localisation \"%s\" ; " +
+                        "        ns:nom \"%s\" . " +
+                        "}",
+                baseUri, generatedId, centre.getCapacite(), centre.getLocalisation(), centre.getNom()
+        );
 
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#capacite"), String.valueOf(centre.getCapacite()));
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#localisation"), centre.getLocalisation());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"), centre.getNom());
-
-        saveRdfModel();
-    }
-
-    public void deleteById(String id) { // Changed to String
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        if (individual != null) {
-            ontModel.removeAll(individual, null, null);
-            ontModel.removeAll(null, null, individual);
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            Dataset dataset = DatasetFactory.create(ontModel);
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, dataset);
+            qexec.execute();
             saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error saving CollectDechet: ", e);
+        }
+    }
+    public void deleteById(String id) {
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ex: <%s> " +
+                        "DELETE WHERE { " +
+                        "    ex:%s ?p ?o . " +
+                        "    ?s ?p2 ex:%s . " +
+                        "}",
+                baseUri, id, id
+        );
+
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, (Dataset) ontModel);
+            qexec.execute();
+        } catch (Exception e) {
+            logger.error("Error deleting CollectDechet by ID: ", e);
         }
     }
 

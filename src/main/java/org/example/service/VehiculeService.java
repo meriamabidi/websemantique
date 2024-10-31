@@ -1,4 +1,8 @@
 package org.example.service;
+import org.apache.jena.update.UpdateExecution;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.example.model.Vehicule;
 import org.springframework.stereotype.Service;
 import org.apache.jena.ontology.Individual;
@@ -98,30 +102,86 @@ public class VehiculeService {
     }
 
     public Optional<Vehicule> findById(String id) {
-        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        return Optional.ofNullable(ind != null ? mapIndividualToVehicule(ind) : null);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlQuery = String.format(
+                "PREFIX ex: <%s> " +
+                        "SELECT ?type ?localisation ?description WHERE { " +
+                        "    ex:%s a ex:Vehicule . " +
+                        "    OPTIONAL { ex:%s ex:type ?type . } " +
+                        "    OPTIONAL { ex:%s ex:localisation ?localisation . } " +
+                        "    OPTIONAL { ex:%s ex:description ?description . } " +
+                        "}",
+                baseUri, id, id, id, id
+        );
+
+        Query query = QueryFactory.create(sparqlQuery);
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, ontModel)) {
+            ResultSet results = qexec.execSelect();
+            if (results.hasNext()) {
+                QuerySolution solution = results.nextSolution();
+                Vehicule vehicule = new Vehicule();
+                vehicule.setId(id);
+                if (solution.contains("type")) {
+                    vehicule.setType(solution.getLiteral("type").getString());
+                }
+                if (solution.contains("localisation")) {
+                    vehicule.setLocalisation(solution.getLiteral("localisation").getString());
+                }
+                if (solution.contains("description")) {
+                    vehicule.setDescription(solution.getLiteral("description").getString());
+                }
+                return Optional.of(vehicule);
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving Vehicule by ID: ", e);
+        }
+        return Optional.empty();
     }
 
     public void save(Vehicule vehicule) {
         String generatedId = UUID.randomUUID().toString();
         vehicule.setId(generatedId);
 
-        Resource vehiculeClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule");
-        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, vehiculeClass);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ns: <%s> " +
+                        "INSERT DATA { " +
+                        "    ns:%s a ns:Vehicule ; " +
+                        "        ns:type \"%s\" ; " +
+                        "        ns:localisation \"%s\" ; " +
+                        "        ns:description \"%s\" . " +
+                        "}",
+                baseUri, generatedId, vehicule.getType(), vehicule.getLocalisation(), vehicule.getDescription()
+        );
 
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type"), vehicule.getType());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#localisation"), vehicule.getLocalisation());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description"), vehicule.getDescription());
-
-        saveRdfModel();
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            Dataset dataset = DatasetFactory.create(ontModel);
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, dataset);
+            qexec.execute();
+            saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error saving CollectDechet: ", e);
+        }
     }
 
     public void deleteById(String id) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        if (individual != null) {
-            ontModel.removeAll(individual, null, null);
-            ontModel.removeAll(null, null, individual);
-            saveRdfModel();
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ex: <%s> " +
+                        "DELETE WHERE { " +
+                        "    ex:%s ?p ?o . " +
+                        "    ?s ?p2 ex:%s . " +
+                        "}",
+                baseUri, id, id
+        );
+
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, (Dataset) ontModel);
+            qexec.execute();
+        } catch (Exception e) {
+            logger.error("Error deleting CollectDechet by ID: ", e);
         }
     }
 
