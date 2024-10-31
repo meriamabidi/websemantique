@@ -34,7 +34,7 @@ public class CollectDechetController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateCollectDechet(@PathVariable String id, @RequestBody CollectDechet blog) {
-        blog.setId(Long.valueOf(id)); // Assuming the id is a Long
+        blog.setId(id); // Assuming the id is a Long
         collectDechetService.update(blog);
         return new ResponseEntity<>(HttpStatus.OK);
     }

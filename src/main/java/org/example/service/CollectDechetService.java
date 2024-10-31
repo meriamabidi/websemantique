@@ -41,7 +41,7 @@ public class CollectDechetService {
         Map<String, CollectDechet> collecteMap = new HashMap<>();
 
         String sparqlQueryString = """
-    PREFIX ns: <http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#>
+    PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
     SELECT ?collecte ?quantite ?etat ?date ?lieu WHERE {
         ?collecte a ns:Collect_Dechet .
         OPTIONAL { ?collecte ns:quantite ?quantite . }
@@ -63,7 +63,7 @@ public class CollectDechetService {
                         : collecteUri.substring(collecteUri.lastIndexOf('/') + 1);
 
                 CollectDechet collecte = collecteMap.getOrDefault(collecteUri, new CollectDechet());
-                collecte.setId(Long.parseLong(idValue)); // Assuming ID is numeric
+                collecte.setId(idValue); // Assuming ID is numeric
 
                 if (soln.contains("quantite")) {
                     collecte.setQuantite(soln.get("quantite").asLiteral().getDouble());
@@ -89,45 +89,49 @@ public class CollectDechetService {
         return collectes;
     }
 
-    public void update(CollectDechet collecte) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#" + collecte.getId());
-        if (individual != null) {
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#quantite"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#etat"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#date"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#lieu"));
 
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#quantite"), String.valueOf(collecte.getQuantite()));
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#etat"), collecte.getEtat());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#date"), collecte.getDate().toString());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#lieu"), collecte.getLieu());
+    public void update(CollectDechet collecte) {
+        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + collecte.getId());
+        if (individual != null) {
+            // Clear previous properties
+            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite"));
+            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#etat"));
+            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date"));
+            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#lieu"));
+
+            // Add new properties
+            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite"), String.valueOf(collecte.getQuantite()));
+            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#etat"), collecte.getEtat());
+            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date"), collecte.getDate().toString());
+            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#lieu"), collecte.getLieu());
 
             saveRdfModel();
         }
     }
 
     public Optional<CollectDechet> findById(Long id) {
-        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#" + id);
+        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         return Optional.ofNullable(ind != null ? mapIndividualToCollecte(ind) : null);
     }
 
     public void save(CollectDechet collecte) {
-        String generatedId = UUID.randomUUID().toString();
-        collecte.setId(Long.valueOf(generatedId)); // Update this line based on how you want to manage IDs
+        // Generate a unique ID as a String
+        String generatedId = UUID.randomUUID().toString(); // Generate a UUID as a String
+        collecte.setId(generatedId); // Set the new generated ID
 
-        Resource collecteClass = ontModel.getOntClass("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#Collect_Dechet");
-        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#" + generatedId, collecteClass);
+        Resource collecteClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Collect_Dechet");
+        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, collecteClass);
 
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#quantite"), String.valueOf(collecte.getQuantite()));
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#etat"), collecte.getEtat());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#date"), collecte.getDate().toString());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#lieu"), collecte.getLieu());
+        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite"), String.valueOf(collecte.getQuantite()));
+        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#etat"), collecte.getEtat());
+        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date"), collecte.getDate().toString());
+        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#lieu"), collecte.getLieu());
 
         saveRdfModel();
     }
 
     public void deleteById(Long id) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#" + id);
+        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         if (individual != null) {
             ontModel.removeAll(individual, null, null);
             ontModel.removeAll(null, null, individual);
@@ -137,10 +141,16 @@ public class CollectDechetService {
 
     private CollectDechet mapIndividualToCollecte(Individual ind) {
         CollectDechet collecte = new CollectDechet();
-        collecte.setId(Long.parseLong(ind.getLocalName()));
-        collecte.setQuantite(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#quantite")).asLiteral().getDouble());
-        collecte.setEtat(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#etat")).toString());
-        String dateString = ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#date")).asLiteral().getValue().toString();
+
+        // Assuming the ID is now a String and you want to keep it that way:
+        String idString = ind.getLocalName(); // Get the local name (ID) as a String
+        collecte.setId(idString); // Assuming you have a method that accepts String ID in CollectDechet
+
+        // Extract other properties
+        collecte.setQuantite(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite")).asLiteral().getDouble());
+        collecte.setEtat(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#etat")).toString());
+
+        String dateString = ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date")).asLiteral().getValue().toString();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // Adjust the format as needed
         try {
             java.util.Date parsedDate = formatter.parse(dateString);
@@ -148,7 +158,8 @@ public class CollectDechetService {
         } catch (ParseException e) {
             logger.error("Error parsing date: " + dateString, e);
         }
-        collecte.setLieu(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#lieu")).toString());
+
+        collecte.setLieu(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#lieu")).toString());
         return collecte;
     }
 

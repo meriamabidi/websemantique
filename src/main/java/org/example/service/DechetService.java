@@ -45,7 +45,7 @@ public class DechetService {
         Map<String, Dechet> dechetMap = new HashMap<>();
 
         String sparqlQueryString = """
-        PREFIX ns: <http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#>
+        PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
         SELECT ?dechet ?type ?poids ?dateCollecte ?description WHERE {
             ?dechet a ns:Dechet .
             OPTIONAL { ?dechet ns:type ?type . }
@@ -94,24 +94,24 @@ public class DechetService {
     }
 
     public void update(Dechet dechet) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#" + dechet.getId());
+        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + dechet.getId());
         if (individual != null) {
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#type"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#poids"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#dateCollecte"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#description"));
+            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type"));
+            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#poids"));
+            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dateCollecte"));
+            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description"));
 
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#type"), dechet.getType());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#poids"), String.valueOf(dechet.getPoids()));
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#dateCollecte"), dechet.getDateCollecte().toString());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#description"), dechet.getDescription());
+            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type"), dechet.getType());
+            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#poids"), String.valueOf(dechet.getPoids()));
+            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dateCollecte"), dechet.getDateCollecte().toString());
+            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description"), dechet.getDescription());
 
             saveRdfModel();
         }
     }
 
     public Optional<Dechet> findById(Long id) {
-        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#" + id);
+        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         return Optional.ofNullable(ind != null ? mapIndividualToDechet(ind) : null);
     }
 
@@ -119,19 +119,19 @@ public class DechetService {
         String generatedId = UUID.randomUUID().toString();
         dechet.setId(Long.valueOf(generatedId)); // Update this line based on how you want to manage IDs
 
-        Resource dechetClass = ontModel.getOntClass("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#Dechet");
-        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#" + generatedId, dechetClass);
+        Resource dechetClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet");
+        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, dechetClass);
 
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#type"), dechet.getType());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#poids"), String.valueOf(dechet.getPoids()));
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#dateCollecte"), dechet.getDateCollecte().toString());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#description"), dechet.getDescription());
+        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type"), dechet.getType());
+        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#poids"), String.valueOf(dechet.getPoids()));
+        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dateCollecte"), dechet.getDateCollecte().toString());
+        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description"), dechet.getDescription());
 
         saveRdfModel();
     }
 
     public void deleteById(Long id) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#" + id);
+        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         if (individual != null) {
             ontModel.removeAll(individual, null, null);
             ontModel.removeAll(null, null, individual);
@@ -142,10 +142,10 @@ public class DechetService {
     private Dechet mapIndividualToDechet(Individual ind) {
         Dechet dechet = new Dechet();
         dechet.setId(Long.parseLong(ind.getLocalName()));
-        dechet.setType(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#type")).toString());
-        dechet.setPoids(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#poids")).asLiteral().getDouble());
-        dechet.setDateCollecte(LocalDate.parse(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#dateCollecte")).toString()));
-        dechet.setDescription(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#description")).toString());
+        dechet.setType(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type")).toString());
+        dechet.setPoids(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#poids")).asLiteral().getDouble());
+        dechet.setDateCollecte(LocalDate.parse(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dateCollecte")).toString()));
+        dechet.setDescription(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description")).toString());
         return dechet;
     }
 
