@@ -16,16 +16,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.FileOutputStream;
 import java.util.*;
-@Service
 
+@Service
 public class CentreRecyclageService {
-    private static final String RDF_FILE_PATH = "C:/Users/MSI/Desktop/websemantique/rdffile.rdf";
+    private static final String RDF_FILE_PATH = "C:/Users/Asus/Desktop/websemantique/rdffile.rdf";
     private OntModel ontModel;
+
+    private static final Logger logger = LoggerFactory.getLogger(CentreRecyclageService.class);
+
     public CentreRecyclageService() {
         loadRdfModel();
     }
-
-    private static final Logger logger = LoggerFactory.getLogger(CentreRecyclageService.class);
 
     private void loadRdfModel() {
         ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM);
@@ -34,12 +35,13 @@ public class CentreRecyclageService {
             ontModel.read(in, null);
         }
     }
+
     public List<CentreRecyclage> findAll() {
         List<CentreRecyclage> centres = new ArrayList<>();
         Map<String, CentreRecyclage> centreMap = new HashMap<>();
 
         String sparqlQueryString = """
-        PREFIX ns: <http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#>
+        PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
         SELECT ?centre ?capacite ?localisation ?nom WHERE {
             ?centre a ns:Centre_Recyclage .
             OPTIONAL { ?centre ns:capacite ?capacite . }
@@ -60,7 +62,7 @@ public class CentreRecyclageService {
                         : centreUri.substring(centreUri.lastIndexOf('/') + 1);
 
                 CentreRecyclage centre = centreMap.getOrDefault(centreUri, new CentreRecyclage());
-                centre.setId(Long.parseLong(idValue)); // Assuming ID is numeric
+                centre.setId(idValue); // Changed to String
 
                 if (soln.contains("capacite")) {
                     centre.setCapacite(soln.get("capacite").asLiteral().getInt());
@@ -84,41 +86,41 @@ public class CentreRecyclageService {
     }
 
     public void update(CentreRecyclage centre) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#" + centre.getId());
+        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + centre.getId());
         if (individual != null) {
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#capacite"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#localisation"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#nom"));
+            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#capacite"));
+            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#localisation"));
+            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"));
 
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#capacite"), String.valueOf(centre.getCapacite()));
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#localisation"), centre.getLocalisation());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#nom"), centre.getNom());
+            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#capacite"), String.valueOf(centre.getCapacite()));
+            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#localisation"), centre.getLocalisation());
+            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"), centre.getNom());
 
             saveRdfModel();
         }
     }
 
-    public Optional<CentreRecyclage> findById(Long id) {
-        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#" + id);
+    public Optional<CentreRecyclage> findById(String id) { // Changed to String
+        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         return Optional.ofNullable(ind != null ? mapIndividualToCentre(ind) : null);
     }
 
     public void save(CentreRecyclage centre) {
         String generatedId = UUID.randomUUID().toString();
-        centre.setId(Long.valueOf(generatedId)); // Update this line based on how you want to manage IDs
+        centre.setId(generatedId); // Now set ID as String
 
-        Resource centreClass = ontModel.getOntClass("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#Centre_Recyclage");
-        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#" + generatedId, centreClass);
+        Resource centreClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_Recyclage");
+        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, centreClass);
 
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#capacite"), String.valueOf(centre.getCapacite()));
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#localisation"), centre.getLocalisation());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#nom"), centre.getNom());
+        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#capacite"), String.valueOf(centre.getCapacite()));
+        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#localisation"), centre.getLocalisation());
+        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"), centre.getNom());
 
         saveRdfModel();
     }
 
-    public void deleteById(Long id) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#" + id);
+    public void deleteById(String id) { // Changed to String
+        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         if (individual != null) {
             ontModel.removeAll(individual, null, null);
             ontModel.removeAll(null, null, individual);
@@ -128,10 +130,10 @@ public class CentreRecyclageService {
 
     private CentreRecyclage mapIndividualToCentre(Individual ind) {
         CentreRecyclage centre = new CentreRecyclage();
-        centre.setId(Long.parseLong(ind.getLocalName()));
-        centre.setCapacite(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#capacite")).asLiteral().getInt());
-        centre.setLocalisation(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#localisation")).toString());
-        centre.setNom(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/acer/ontologies/2024/9/untitled-ontology-2#nom")).toString());
+        centre.setId(ind.getLocalName()); // Changed to String
+        centre.setCapacite(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#capacite")).asLiteral().getInt());
+        centre.setLocalisation(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#localisation")).toString());
+        centre.setNom(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom")).toString());
         return centre;
     }
 
@@ -142,5 +144,4 @@ public class CentreRecyclageService {
             logger.error("Error saving RDF model: ", e);
         }
     }
-
 }

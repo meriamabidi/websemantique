@@ -12,7 +12,7 @@ public class CollectDechet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private double quantite; // en kg
     private String etat; // e.g., "collecté", "en attente", etc.
     private Date date;
@@ -29,11 +29,11 @@ public class CollectDechet {
     }
 
     // Getters et Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
