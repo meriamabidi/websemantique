@@ -67,7 +67,7 @@ public class DechetService {
                         : dechetUri.substring(dechetUri.lastIndexOf('/') + 1);
 
                 Dechet dechet = dechetMap.getOrDefault(dechetUri, new Dechet());
-                dechet.setId(Long.parseLong(idValue)); // Assuming ID is numeric
+                dechet.setId(idValue); // Assuming ID is numeric
 
                 if (soln.contains("type")) {
                     dechet.setType(soln.get("type").toString());
@@ -117,7 +117,7 @@ public class DechetService {
 
     public void save(Dechet dechet) {
         String generatedId = UUID.randomUUID().toString();
-        dechet.setId(Long.valueOf(generatedId)); // Update this line based on how you want to manage IDs
+        dechet.setId(generatedId); // Update this line based on how you want to manage IDs
 
         Resource dechetClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet");
         Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, dechetClass);
@@ -141,7 +141,7 @@ public class DechetService {
 
     private Dechet mapIndividualToDechet(Individual ind) {
         Dechet dechet = new Dechet();
-        dechet.setId(Long.parseLong(ind.getLocalName()));
+        dechet.setId(ind.getLocalName());
         dechet.setType(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type")).toString());
         dechet.setPoids(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#poids")).asLiteral().getDouble());
         dechet.setDateCollecte(LocalDate.parse(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dateCollecte")).toString()));
