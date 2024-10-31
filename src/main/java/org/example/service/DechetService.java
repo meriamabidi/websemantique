@@ -4,7 +4,12 @@ package org.example.service;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.update.UpdateExecution;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.util.FileManager;
+import org.example.model.Company;
 import org.example.model.Dechet;
 import org.springframework.stereotype.Service;
 
@@ -111,33 +116,94 @@ public class DechetService {
     }
 
     public Optional<Dechet> findById(String id) {
-        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        return Optional.ofNullable(ind != null ? mapIndividualToDechet(ind) : null);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlQuery = String.format(
+                "PREFIX ex: <%s> " +
+                        "SELECT ?type ?poids ?dateCollecte ?description WHERE { " +
+                        "    ex:%s a ex:Dechet . " +
+                        "    OPTIONAL { ex:%s ex:type ?type . } " +
+                        "    OPTIONAL { ex:%s ex:poids ?poids . } " +
+                        "    OPTIONAL { ex:%s ex:dateCollecte ?dateCollecte . } " +
+                        "    OPTIONAL { ex:%s ex:description ?description . } " +
+                        "}",
+                baseUri, id, id, id, id, id
+        );
+
+        Query query = QueryFactory.create(sparqlQuery);
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, ontModel)) {
+            ResultSet results = qexec.execSelect();
+            if (results.hasNext()) {
+                QuerySolution solution = results.nextSolution();
+                Dechet dechet = new Dechet();
+                dechet.setId(id);
+                if (solution.contains("type")) {
+                    dechet.setType(solution.getLiteral("type").getString());
+                }
+                if (solution.contains("poids")) {
+                    dechet.setPoids(solution.getLiteral("poids").getDouble());
+                }
+                if (solution.contains("dateCollecte")) {
+                    dechet.setDateCollecte(solution.getLiteral("dateCollecte").getString());
+                }
+                if (solution.contains("description")) {
+                    dechet.setDescription(solution.getLiteral("description").getString());
+                }
+                return Optional.of(dechet);
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving Dechet by ID: ", e);
+        }
+        return Optional.empty();
     }
 
     public void save(Dechet dechet) {
         String generatedId = UUID.randomUUID().toString();
         dechet.setId(generatedId); // Update this line based on how you want to manage IDs
 
-        Resource dechetClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet");
-        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, dechetClass);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ns: <%s> " +
+                        "INSERT DATA { " +
+                        "    ns:%s a ns:Dechet ; " +
+                        "        ns:type \"%s\" ; " +
+                        "        ns:poids \"%s\"^^<http://www.w3.org/2001/XMLSchema#double> ; " +
+                        "        ns:dateCollecte \"%s\"^^<http://www.w3.org/2001/XMLSchema#date> ; " +
+                        "        ns:description \"%s\" . " +
+                        "}",
+                baseUri, generatedId, dechet.getType(), dechet.getPoids(), dechet.getDateCollecte(), dechet.getDescription()
+        );
 
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type"), dechet.getType());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#poids"), String.valueOf(dechet.getPoids()));
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dateCollecte"), dechet.getDateCollecte().toString());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description"), dechet.getDescription());
-
-        saveRdfModel();
-    }
-
-    public void deleteById(String id) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        if (individual != null) {
-            ontModel.removeAll(individual, null, null);
-            ontModel.removeAll(null, null, individual);
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, (Dataset) ontModel);
+            qexec.execute();
             saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error saving Dechet: ", e);
         }
     }
+    public void deleteById(String id) {
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ex: <%s> " +
+                        "DELETE WHERE { " +
+                        "    ex:%s ?p ?o . " +
+                        "    ?s ?p2 ex:%s . " +
+                        "}",
+                baseUri, id, id
+        );
+
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            Dataset dataset = DatasetFactory.create(ontModel);
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, dataset);
+            qexec.execute();
+            saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error saving CollectDechet: ", e);
+        }
+    }
+
 
     private Dechet mapIndividualToDechet(Individual ind) {
         Dechet dechet = new Dechet();

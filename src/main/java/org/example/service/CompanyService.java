@@ -2,6 +2,10 @@ package org.example.service;
 
 
 import org.apache.jena.query.Query;
+import org.apache.jena.update.UpdateExecution;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.apache.jena.util.FileManager;
 import org.example.model.Company;
 import org.springframework.stereotype.Service;
@@ -97,32 +101,89 @@ public class CompanyService {
     }
 
     public Optional<Company> findById(String id) {
-        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        return Optional.ofNullable(ind != null ? mapIndividualToCompany(ind) : null);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlQuery = String.format(
+                "PREFIX ex: <%s> " +
+                        "SELECT ?nom ?adresse ?contact WHERE { " +
+                        "    ex:%s a ex:Compagnie . " +
+                        "    OPTIONAL { ex:%s ex:nom ?nom . } " +
+                        "    OPTIONAL { ex:%s ex:adresse ?adresse . } " +
+                        "    OPTIONAL { ex:%s ex:contact ?contact . } " +
+                        "}",
+                baseUri, id, id, id, id
+        );
+
+        Query query = QueryFactory.create(sparqlQuery);
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, ontModel)) {
+            ResultSet results = qexec.execSelect();
+            if (results.hasNext()) {
+                QuerySolution solution = results.nextSolution();
+                Company company = new Company();
+                company.setId(id);
+                if (solution.contains("nom")) {
+                    company.setNom(solution.getLiteral("nom").getString());
+                }
+                if (solution.contains("adresse")) {
+                    company.setAdresse(solution.getLiteral("adresse").getString());
+                }
+                if (solution.contains("contact")) {
+                    company.setContact(solution.getLiteral("contact").getString());
+                }
+                return Optional.of(company);
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving Company by ID: ", e);
+        }
+        return Optional.empty();
     }
 
     public void save(Company company) {
         String generatedId = UUID.randomUUID().toString();
         company.setId(generatedId); // Update this line based on how you want to manage IDs
 
-        Resource companyClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagnie");
-        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, companyClass);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ns: <%s> " +
+                        "INSERT DATA { " +
+                        "    ns:%s a ns:Compagnie ; " +
+                        "        ns:nom \"%s\" ; " +
+                        "        ns:adresse \"%s\" ; " +
+                        "        ns:contact \"%s\" . " +
+                        "}",
+                baseUri, generatedId, company.getNom(), company.getAdresse(), company.getContact()
+        );
 
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"), company.getNom());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#adresse"), company.getAdresse());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#contact"), company.getContact());
-
-        saveRdfModel();
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            Dataset dataset = DatasetFactory.create(ontModel);
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, dataset);
+            qexec.execute();
+            saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error saving CollectDechet: ", e);
+        }
     }
 
     public void deleteById(String id) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        if (individual != null) {
-            ontModel.removeAll(individual, null, null);
-            ontModel.removeAll(null, null, individual);
-            saveRdfModel();
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ex: <%s> " +
+                        "DELETE WHERE { " +
+                        "    ex:%s ?p ?o . " +
+                        "    ?s ?p2 ex:%s . " +
+                        "}",
+                baseUri, id, id
+        );
+
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, (Dataset) ontModel);
+            qexec.execute();
+        } catch (Exception e) {
+            logger.error("Error deleting CollectDechet by ID: ", e);
         }
     }
+
 
     private Company mapIndividualToCompany(Individual ind) {
         Company company = new Company();

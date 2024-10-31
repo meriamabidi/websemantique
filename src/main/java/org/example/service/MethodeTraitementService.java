@@ -1,4 +1,8 @@
 package org.example.service;
+import org.apache.jena.update.UpdateExecution;
+import org.apache.jena.update.UpdateExecutionFactory;
+import org.apache.jena.update.UpdateFactory;
+import org.apache.jena.update.UpdateRequest;
 import org.example.model.MethodeTraitement;
 import org.springframework.stereotype.Service;
 import org.apache.jena.ontology.Individual;
@@ -105,31 +109,91 @@ public class MethodeTraitementService {
     }
 
     public Optional<MethodeTraitement> findById(String id) {
-        Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        return Optional.ofNullable(ind != null ? mapIndividualToMethode(ind) : null);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlQuery = String.format(
+                "PREFIX ex: <%s> " +
+                        "SELECT ?nom ?description ?temps ?couts WHERE { " +
+                        "    ex:%s a ex:Methode_de_traitement . " +
+                        "    OPTIONAL { ex:%s ex:nom ?nom . } " +
+                        "    OPTIONAL { ex:%s ex:description ?description . } " +
+                        "    OPTIONAL { ex:%s ex:temps ?temps . } " +
+                        "    OPTIONAL { ex:%s ex:couts ?couts . } " +
+                        "}",
+                baseUri, id, id, id, id, id
+        );
+
+        Query query = QueryFactory.create(sparqlQuery);
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, ontModel)) {
+            ResultSet results = qexec.execSelect();
+            if (results.hasNext()) {
+                QuerySolution solution = results.nextSolution();
+                MethodeTraitement methode = new MethodeTraitement();
+                methode.setId(id);
+                if (solution.contains("nom")) {
+                    methode.setNom(solution.getLiteral("nom").getString());
+                }
+                if (solution.contains("description")) {
+                    methode.setDescription(solution.getLiteral("description").getString());
+                }
+                if (solution.contains("temps")) {
+                    methode.setTemps(solution.getLiteral("temps").getInt());
+                }
+                if (solution.contains("couts")) {
+                    methode.setCouts(solution.getLiteral("couts").getDouble());
+                }
+                return Optional.of(methode);
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving MethodeTraitement by ID: ", e);
+        }
+        return Optional.empty();
     }
 
     public void save(MethodeTraitement methode) {
         String generatedId = UUID.randomUUID().toString();
         methode.setId(generatedId);
 
-        Resource methodeClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement");
-        Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, methodeClass);
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ns: <%s> " +
+                        "INSERT DATA { " +
+                        "    ns:%s a ns:Methode_Traitement ; " +
+                        "        ns:nom \"%s\" ; " +
+                        "        ns:description \"%s\" ; " +
+                        "        ns:temps \"%s\"^^<http://www.w3.org/2001/XMLSchema#int> ; " +
+                        "        ns:couts \"%s\"^^<http://www.w3.org/2001/XMLSchema#double> . " +
+                        "}",
+                baseUri, generatedId, methode.getNom(), methode.getDescription(), methode.getTemps(), methode.getCouts()
+        );
 
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"), methode.getNom());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description"), methode.getDescription());
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#temps"), String.valueOf(methode.getTemps()));
-        individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#couts"), String.valueOf(methode.getCouts()));
-
-        saveRdfModel();
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            Dataset dataset = DatasetFactory.create(ontModel);
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, dataset);
+            qexec.execute();
+            saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error saving CollectDechet: ", e);
+        }
     }
 
     public void deleteById(String id) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
-        if (individual != null) {
-            ontModel.removeAll(individual, null, null);
-            ontModel.removeAll(null, null, individual);
-            saveRdfModel();
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String sparqlUpdate = String.format(
+                "PREFIX ex: <%s> " +
+                        "DELETE WHERE { " +
+                        "    ex:%s ?p ?o . " +
+                        "    ?s ?p2 ex:%s . " +
+                        "}",
+                baseUri, id, id
+        );
+
+        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+        try {
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, (Dataset) ontModel);
+            qexec.execute();
+        } catch (Exception e) {
+            logger.error("Error deleting CollectDechet by ID: ", e);
         }
     }
 
