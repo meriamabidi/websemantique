@@ -19,7 +19,7 @@ import java.util.*;
 
 @Service
 public class CollectDechetService {
-    private static final String RDF_FILE_PATH = "C:/Users/MSI/Desktop/websemantique/rdffile.rdf";
+    private static final String RDF_FILE_PATH = "C:/Users/Asus/Desktop/websemantique/rdffile.rdf";
     private OntModel ontModel;
 
     public CollectDechetService() {
@@ -89,17 +89,14 @@ public class CollectDechetService {
         return collectes;
     }
 
-
     public void update(CollectDechet collecte) {
         Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + collecte.getId());
         if (individual != null) {
-            // Clear previous properties
             individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite"));
             individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#etat"));
             individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date"));
             individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#lieu"));
 
-            // Add new properties
             individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite"), String.valueOf(collecte.getQuantite()));
             individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#etat"), collecte.getEtat());
             individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date"), collecte.getDate().toString());
@@ -109,15 +106,14 @@ public class CollectDechetService {
         }
     }
 
-    public Optional<CollectDechet> findById(Long id) {
+    public Optional<CollectDechet> findById(String id) {
         Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         return Optional.ofNullable(ind != null ? mapIndividualToCollecte(ind) : null);
     }
 
     public void save(CollectDechet collecte) {
-        // Generate a unique ID as a String
-        String generatedId = UUID.randomUUID().toString(); // Generate a UUID as a String
-        collecte.setId(generatedId); // Set the new generated ID
+        String generatedId = UUID.randomUUID().toString();
+        collecte.setId(generatedId); // Update this line based on how you want to manage IDs
 
         Resource collecteClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Collect_Dechet");
         Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, collecteClass);
@@ -130,7 +126,7 @@ public class CollectDechetService {
         saveRdfModel();
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         if (individual != null) {
             ontModel.removeAll(individual, null, null);
@@ -141,15 +137,9 @@ public class CollectDechetService {
 
     private CollectDechet mapIndividualToCollecte(Individual ind) {
         CollectDechet collecte = new CollectDechet();
-
-        // Assuming the ID is now a String and you want to keep it that way:
-        String idString = ind.getLocalName(); // Get the local name (ID) as a String
-        collecte.setId(idString); // Assuming you have a method that accepts String ID in CollectDechet
-
-        // Extract other properties
+        collecte.setId(ind.getLocalName());
         collecte.setQuantite(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite")).asLiteral().getDouble());
         collecte.setEtat(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#etat")).toString());
-
         String dateString = ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date")).asLiteral().getValue().toString();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // Adjust the format as needed
         try {
@@ -158,7 +148,6 @@ public class CollectDechetService {
         } catch (ParseException e) {
             logger.error("Error parsing date: " + dateString, e);
         }
-
         collecte.setLieu(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#lieu")).toString());
         return collecte;
     }
@@ -169,5 +158,4 @@ public class CollectDechetService {
         } catch (Exception e) {
             logger.error("Error saving RDF model: ", e);
         }
-    }
-}
+    }}

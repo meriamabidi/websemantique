@@ -13,6 +13,7 @@ public class CollectDechet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
+
     private double quantite; // en kg
     private String etat; // e.g., "collecté", "en attente", etc.
     private Date date;

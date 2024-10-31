@@ -40,47 +40,52 @@ public class CentreRecyclageService {
         List<CentreRecyclage> centres = new ArrayList<>();
         Map<String, CentreRecyclage> centreMap = new HashMap<>();
 
+        // SPARQL query to retrieve all Centre_Recyclage individuals with their properties
         String sparqlQueryString = """
-        PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
-        SELECT ?centre ?capacite ?localisation ?nom WHERE {
-            ?centre a ns:Centre_Recyclage .
-            OPTIONAL { ?centre ns:capacite ?capacite . }
-            OPTIONAL { ?centre ns:localisation ?localisation . }
-            OPTIONAL { ?centre ns:nom ?nom . }
-        }
-        """;
+    PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
+    SELECT ?centre ?capacite ?localisation ?nom WHERE {
+        ?centre a ns:Centre_Recyclage .
+        OPTIONAL { ?centre ns:capacite ?capacite . }
+        OPTIONAL { ?centre ns:localisation ?localisation . }
+        OPTIONAL { ?centre ns:nom ?nom . }
+    }
+    """;
 
         Query query = QueryFactory.create(sparqlQueryString);
 
         try (QueryExecution qexec = QueryExecutionFactory.create(query, ontModel)) {
             ResultSet results = qexec.execSelect();
 
+            // Process results and map them to CentreRecyclage objects
             while (results.hasNext()) {
                 QuerySolution soln = results.nextSolution();
                 String centreUri = soln.get("centre").toString();
-                String idValue = centreUri.contains("#") ? centreUri.substring(centreUri.lastIndexOf('#') + 1)
-                        : centreUri.substring(centreUri.lastIndexOf('/') + 1);
+                String idValue = centreUri.contains("#") ?
+                        centreUri.substring(centreUri.lastIndexOf('#') + 1) :
+                        centreUri.substring(centreUri.lastIndexOf('/') + 1);
 
+                // Retrieve or create the CentreRecyclage object
                 CentreRecyclage centre = centreMap.getOrDefault(centreUri, new CentreRecyclage());
-                centre.setId(idValue); // Changed to String
+                centre.setId(idValue); // Set the extracted ID
 
-                if (soln.contains("capacite")) {
+                // Set properties if they exist
+                if (soln.contains("capacite") && soln.get("capacite").isLiteral()) {
                     centre.setCapacite(soln.get("capacite").asLiteral().getInt());
                 }
-                if (soln.contains("localisation")) {
-                    centre.setLocalisation(soln.get("localisation").toString());
+                if (soln.contains("localisation") && soln.get("localisation").isLiteral()) {
+                    centre.setLocalisation(soln.get("localisation").asLiteral().getString());
                 }
-                if (soln.contains("nom")) {
-                    centre.setNom(soln.get("nom").toString());
+                if (soln.contains("nom") && soln.get("nom").isLiteral()) {
+                    centre.setNom(soln.get("nom").asLiteral().getString());
                 }
 
-                centreMap.put(centreUri, centre);
+                centreMap.put(centreUri, centre); // Store the centre in the map
             }
         } catch (Exception e) {
             logger.error("Error retrieving centres: ", e);
         }
 
-        centres.addAll(centreMap.values());
+        centres.addAll(centreMap.values()); // Collect all CentreRecyclage instances into the final list
         logger.info("Total centres retrieved: " + centres.size());
         return centres;
     }
