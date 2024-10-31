@@ -19,7 +19,7 @@ import java.util.*;
 
 public class FournisseurService {
     // Define RDF path and load model
-    private static final String RDF_FILE_PATH = "C:/Users/Asus/Desktop/websemantique/rdffile.rdf";
+    private static final String RDF_FILE_PATH = "C:/Users/user/Desktop/websemantique/rdffile.rdf";
     private OntModel ontModel;
 
     public FournisseurService() {

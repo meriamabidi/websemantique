@@ -19,7 +19,7 @@ import java.util.*;
 
 @Service
 public class CollectDechetService {
-    private static final String RDF_FILE_PATH = "C:/Users/Asus/Desktop/websemantique/rdffile.rdf";
+    private static final String RDF_FILE_PATH = "C:/Users/user/Desktop/websemantique/rdffile.rdf";
     private OntModel ontModel;
 
     public CollectDechetService() {

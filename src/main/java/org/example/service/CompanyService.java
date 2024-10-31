@@ -16,7 +16,7 @@ import java.io.*;
 import java.util.*;
 @Service
 public class CompanyService {
-    private static final String RDF_FILE_PATH = "C:/Users/Asus/Desktop/websemantique/rdffile.rdf";
+    private static final String RDF_FILE_PATH = "C:/Users/user/Desktop/websemantique/rdffile.rdf";
     private OntModel ontModel;
     private static final Logger logger = LoggerFactory.getLogger(CompanyService.class);
 
