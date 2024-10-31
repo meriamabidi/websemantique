@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.apache.jena.rdf.model.impl.RDFDefaultErrorHandler.logger;
+
 @RestController
 @RequestMapping("/CentreRecyclage")
 @CrossOrigin(origins = "http://localhost:4200")
@@ -18,7 +20,11 @@ public class CentreRecyclageController {
 
     @GetMapping
     public List<CentreRecyclage> getAllCentreRecyclages() {
-        return centreRecyclageService.findAll();
+        List<CentreRecyclage> centres = centreRecyclageService.findAll();
+        if (centres.isEmpty()) {
+            logger.warn("Aucun centre de recyclage trouvé.");
+        }
+        return centres;
     }
 
     @GetMapping("/{id}")

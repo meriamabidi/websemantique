@@ -11,18 +11,17 @@ import java.util.Date;
 public class CollectDechet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     private double quantite; // en kg
     private String etat; // e.g., "collecté", "en attente", etc.
-    private Date date;
+    private String date;
     private String lieu;
 
     public CollectDechet() {
     }
 
-    public CollectDechet(double quantite, String etat, Date date, String lieu) {
+    public CollectDechet(double quantite, String etat, String date, String lieu) {
         this.quantite = quantite;
         this.etat = etat;
         this.date = date;
@@ -54,11 +53,11 @@ public class CollectDechet {
         this.etat = etat;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

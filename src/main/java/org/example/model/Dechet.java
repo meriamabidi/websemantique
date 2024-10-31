@@ -7,21 +7,20 @@ import java.time.LocalDate;
 public class Dechet {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
     private String type;
 
     private double poids;
 
-    private LocalDate dateCollecte;
+    private String dateCollecte;
 
     private String description;
 
     // Constructeurs
     public Dechet() {}
 
-    public Dechet(String type, double poids, LocalDate dateCollecte, String description) {
+    public Dechet(String type, double poids, String dateCollecte, String description) {
         this.type = type;
         this.poids = poids;
         this.dateCollecte = dateCollecte;
@@ -53,11 +52,11 @@ public class Dechet {
         this.poids = poids;
     }
 
-    public LocalDate getDateCollecte() {
+    public String getDateCollecte() {
         return dateCollecte;
     }
 
-    public void setDateCollecte(LocalDate dateCollecte) {
+    public void setDateCollecte(String dateCollecte) {
         this.dateCollecte = dateCollecte;
     }
 

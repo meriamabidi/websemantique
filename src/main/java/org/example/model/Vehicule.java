@@ -10,7 +10,6 @@ import javax.persistence.Id;
 public class Vehicule {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String type;
     private String localisation;

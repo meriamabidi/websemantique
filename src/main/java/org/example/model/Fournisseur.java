@@ -10,7 +10,6 @@ import jakarta.persistence.Id;
 public class Fournisseur {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
     private String nom;
     private String adresse;

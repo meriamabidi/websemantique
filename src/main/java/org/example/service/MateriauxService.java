@@ -39,8 +39,8 @@ public class MateriauxService {
 
         String sparqlQueryString = """
         PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
-        SELECT ?materiaux ?type ?poids ?nom ?description ?categorie WHERE {
-            ?materiaux a ns:Materiaux .
+        SELECT ?Materiaux_Recycles ?type ?poids ?nom ?description ?categorie WHERE {
+            ?materiaux a ns:Materiaux_Recycles .
             OPTIONAL { ?materiaux ns:type ?type . }
             OPTIONAL { ?materiaux ns:poids ?poids . }
             OPTIONAL { ?materiaux ns:nom ?nom . }
@@ -99,7 +99,7 @@ public class MateriauxService {
         String generatedId = UUID.randomUUID().toString();
         materiaux.setId(generatedId);
 
-        Resource materiauxClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux");
+        Resource materiauxClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles");
         Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, materiauxClass);
 
         individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type"), materiaux.getType());

@@ -41,7 +41,7 @@ public class MethodeTraitementService {
         String sparqlQueryString = """
     PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
     SELECT ?methode ?nom ?description ?temps ?couts WHERE {
-        ?methode a ns:Methode_Traitement .
+        ?methode a ns:Methode_de_traitement .
         OPTIONAL { ?methode ns:nom ?nom . }
         OPTIONAL { ?methode ns:description ?description . }
         OPTIONAL { ?methode ns:temps ?temps . }
@@ -113,7 +113,7 @@ public class MethodeTraitementService {
         String generatedId = UUID.randomUUID().toString();
         methode.setId(generatedId);
 
-        Resource methodeClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_Traitement");
+        Resource methodeClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement");
         Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, methodeClass);
 
         individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"), methode.getNom());

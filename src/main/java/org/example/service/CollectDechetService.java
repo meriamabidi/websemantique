@@ -43,7 +43,7 @@ public class CollectDechetService {
         String sparqlQueryString = """
     PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
     SELECT ?collecte ?quantite ?etat ?date ?lieu WHERE {
-        ?collecte a ns:Collect_Dechet .
+        ?collecte a ns:collecte_dechet .
         OPTIONAL { ?collecte ns:quantite ?quantite . }
         OPTIONAL { ?collecte ns:etat ?etat . }
         OPTIONAL { ?collecte ns:date ?date . }
@@ -72,7 +72,7 @@ public class CollectDechetService {
                     collecte.setEtat(soln.get("etat").toString());
                 }
                 if (soln.contains("date")) {
-                    collecte.setDate((Date) soln.get("date").asLiteral().getValue());
+                    collecte.setDate(soln.get("date").toString());
                 }
                 if (soln.contains("lieu")) {
                     collecte.setLieu(soln.get("lieu").toString());
@@ -115,7 +115,7 @@ public class CollectDechetService {
         String generatedId = UUID.randomUUID().toString();
         collecte.setId(generatedId); // Update this line based on how you want to manage IDs
 
-        Resource collecteClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Collect_Dechet");
+        Resource collecteClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#collecte_dechet");
         Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, collecteClass);
 
         individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite"), String.valueOf(collecte.getQuantite()));
@@ -138,16 +138,10 @@ public class CollectDechetService {
     private CollectDechet mapIndividualToCollecte(Individual ind) {
         CollectDechet collecte = new CollectDechet();
         collecte.setId(ind.getLocalName());
-        collecte.setQuantite(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite")).asLiteral().getDouble());
         collecte.setEtat(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#etat")).toString());
-        String dateString = ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date")).asLiteral().getValue().toString();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); // Adjust the format as needed
-        try {
-            java.util.Date parsedDate = formatter.parse(dateString);
-            collecte.setDate(new java.sql.Date(parsedDate.getTime()));
-        } catch (ParseException e) {
-            logger.error("Error parsing date: " + dateString, e);
-        }
+
+        collecte.setQuantite(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite")).asLiteral().getDouble());
+        collecte.setDate(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date")).toString());
         collecte.setLieu(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#lieu")).toString());
         return collecte;
     }
