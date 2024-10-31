@@ -22,7 +22,7 @@ public class DechetController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<Dechet> getDechetById(@PathVariable String id) {
-        return dechetService.findById(Long.valueOf(id))
+        return dechetService.findById(id)
                 .map(hebergment -> new ResponseEntity<>(hebergment, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -34,7 +34,7 @@ public class DechetController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateDechet(@PathVariable String id, @RequestBody Dechet blog) {
-        blog.setId(Long.valueOf(id)); // Assuming the id is a Long
+        blog.setId(id); // Assuming the id is a Long
         dechetService.update(blog);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -43,7 +43,7 @@ public class DechetController {
     public ResponseEntity<Void> deleteDechet
 
             (@PathVariable String id) {
-        dechetService.deleteById(Long.valueOf(id));
+        dechetService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

@@ -96,7 +96,7 @@ public class CompanyService {
         }
     }
 
-    public Optional<Company> findById(Long id) {
+    public Optional<Company> findById(String id) {
         Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         return Optional.ofNullable(ind != null ? mapIndividualToCompany(ind) : null);
     }
@@ -115,7 +115,7 @@ public class CompanyService {
         saveRdfModel();
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         if (individual != null) {
             ontModel.removeAll(individual, null, null);

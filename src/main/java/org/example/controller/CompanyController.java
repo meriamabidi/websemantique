@@ -21,7 +21,7 @@ public class CompanyController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<Company> getCompanyById(@PathVariable String id) {
-        return companyService.findById(Long.valueOf(id))
+        return companyService.findById(id)
                 .map(hebergment -> new ResponseEntity<>(hebergment, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -42,7 +42,7 @@ public class CompanyController {
     public ResponseEntity<Void> deleteCompany
 
             (@PathVariable String id) {
-        companyService.deleteById(Long.valueOf(id));
+        companyService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

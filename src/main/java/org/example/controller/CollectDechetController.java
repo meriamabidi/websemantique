@@ -22,7 +22,7 @@ public class CollectDechetController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<CollectDechet> getCollectDechetById(@PathVariable String id) {
-        return collectDechetService.findById(Long.valueOf(id))
+        return collectDechetService.findById(id)
                 .map(hebergment -> new ResponseEntity<>(hebergment, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -43,7 +43,7 @@ public class CollectDechetController {
     public ResponseEntity<Void> deleteCollectDechet
 
             (@PathVariable String id) {
-        collectDechetService.deleteById(Long.valueOf(id));
+        collectDechetService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

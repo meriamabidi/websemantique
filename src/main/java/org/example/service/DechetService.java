@@ -110,7 +110,7 @@ public class DechetService {
         }
     }
 
-    public Optional<Dechet> findById(Long id) {
+    public Optional<Dechet> findById(String id) {
         Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         return Optional.ofNullable(ind != null ? mapIndividualToDechet(ind) : null);
     }
@@ -130,7 +130,7 @@ public class DechetService {
         saveRdfModel();
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         if (individual != null) {
             ontModel.removeAll(individual, null, null);
