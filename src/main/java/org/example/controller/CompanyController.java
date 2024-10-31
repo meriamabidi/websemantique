@@ -33,7 +33,7 @@ public class CompanyController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateCompany(@PathVariable String id, @RequestBody Company blog) {
-        blog.setId(Long.valueOf(id)); // Assuming the id is a Long
+        blog.setId(id); // Assuming the id is a Long
         companyService.update(blog);
         return new ResponseEntity<>(HttpStatus.OK);
     }
