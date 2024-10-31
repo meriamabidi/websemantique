@@ -63,7 +63,7 @@ public class CollectDechetService {
                         : collecteUri.substring(collecteUri.lastIndexOf('/') + 1);
 
                 CollectDechet collecte = collecteMap.getOrDefault(collecteUri, new CollectDechet());
-                collecte.setId(Long.parseLong(idValue)); // Assuming ID is numeric
+                collecte.setId(idValue); // Assuming ID is numeric
 
                 if (soln.contains("quantite")) {
                     collecte.setQuantite(soln.get("quantite").asLiteral().getDouble());
@@ -106,14 +106,14 @@ public class CollectDechetService {
         }
     }
 
-    public Optional<CollectDechet> findById(Long id) {
+    public Optional<CollectDechet> findById(String id) {
         Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         return Optional.ofNullable(ind != null ? mapIndividualToCollecte(ind) : null);
     }
 
     public void save(CollectDechet collecte) {
         String generatedId = UUID.randomUUID().toString();
-        collecte.setId(Long.valueOf(generatedId)); // Update this line based on how you want to manage IDs
+        collecte.setId(generatedId); // Update this line based on how you want to manage IDs
 
         Resource collecteClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Collect_Dechet");
         Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, collecteClass);
@@ -126,7 +126,7 @@ public class CollectDechetService {
         saveRdfModel();
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         if (individual != null) {
             ontModel.removeAll(individual, null, null);
@@ -137,7 +137,7 @@ public class CollectDechetService {
 
     private CollectDechet mapIndividualToCollecte(Individual ind) {
         CollectDechet collecte = new CollectDechet();
-        collecte.setId(Long.parseLong(ind.getLocalName()));
+        collecte.setId(ind.getLocalName());
         collecte.setQuantite(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite")).asLiteral().getDouble());
         collecte.setEtat(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#etat")).toString());
         String dateString = ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date")).asLiteral().getValue().toString();

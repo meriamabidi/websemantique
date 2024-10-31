@@ -11,7 +11,7 @@ public class MethodeTraitement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String nom;
     private String description;
     private int temps; // en minutes
@@ -28,11 +28,11 @@ public class MethodeTraitement {
     }
 
     // Getters et Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

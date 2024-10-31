@@ -11,7 +11,7 @@ public class Vehicule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     private String type;
     private String localisation;
     private String description;
@@ -26,11 +26,11 @@ public class Vehicule {
     }
 
     // Getters et Setters
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

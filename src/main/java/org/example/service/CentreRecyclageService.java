@@ -60,7 +60,7 @@ public class CentreRecyclageService {
                         : centreUri.substring(centreUri.lastIndexOf('/') + 1);
 
                 CentreRecyclage centre = centreMap.getOrDefault(centreUri, new CentreRecyclage());
-                centre.setId(Long.parseLong(idValue)); // Assuming ID is numeric
+                centre.setId(idValue); // Assuming ID is numeric
 
                 if (soln.contains("capacite")) {
                     centre.setCapacite(soln.get("capacite").asLiteral().getInt());
@@ -98,14 +98,14 @@ public class CentreRecyclageService {
         }
     }
 
-    public Optional<CentreRecyclage> findById(Long id) {
+    public Optional<CentreRecyclage> findById(String id) {
         Individual ind = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         return Optional.ofNullable(ind != null ? mapIndividualToCentre(ind) : null);
     }
 
     public void save(CentreRecyclage centre) {
         String generatedId = UUID.randomUUID().toString();
-        centre.setId(Long.valueOf(generatedId)); // Update this line based on how you want to manage IDs
+        centre.setId(generatedId); // Set the generated ID
 
         Resource centreClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_Recyclage");
         Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, centreClass);
@@ -117,7 +117,7 @@ public class CentreRecyclageService {
         saveRdfModel();
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + id);
         if (individual != null) {
             ontModel.removeAll(individual, null, null);
@@ -128,7 +128,7 @@ public class CentreRecyclageService {
 
     private CentreRecyclage mapIndividualToCentre(Individual ind) {
         CentreRecyclage centre = new CentreRecyclage();
-        centre.setId(Long.parseLong(ind.getLocalName()));
+        centre.setId(ind.getLocalName());
         centre.setCapacite(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#capacite")).asLiteral().getInt());
         centre.setLocalisation(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#localisation")).toString());
         centre.setNom(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom")).toString());

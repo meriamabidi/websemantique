@@ -21,7 +21,7 @@ public class CentreRecyclageController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<CentreRecyclage> getCentreRecyclageById(@PathVariable String id) {
-        return centreRecyclageService.findById(Long.valueOf(id))
+        return centreRecyclageService.findById(id)
                 .map(hebergment -> new ResponseEntity<>(hebergment, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -33,7 +33,7 @@ public class CentreRecyclageController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateCentreRecyclage(@PathVariable String id, @RequestBody CentreRecyclage blog) {
-        blog.setId(Long.valueOf(id)); // Assuming the id is a Long
+        blog.setId(id); // Assuming the id is a Long
         centreRecyclageService.update(blog);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -42,7 +42,7 @@ public class CentreRecyclageController {
     public ResponseEntity<Void> deleteCentreRecyclage
 
             (@PathVariable String id) {
-        centreRecyclageService.deleteById(Long.valueOf(id));
+        centreRecyclageService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
   /*  @GetMapping("/search")
