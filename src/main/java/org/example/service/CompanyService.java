@@ -39,7 +39,7 @@ public class CompanyService {
         String sparqlQueryString = """
         PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
         SELECT ?company ?nom ?adresse ?contact WHERE {
-            ?company a ns:Company .
+            ?company a ns:Compagnie .
             OPTIONAL { ?company ns:nom ?nom . }
             OPTIONAL { ?company ns:adresse ?adresse . }
             OPTIONAL { ?company ns:contact ?contact . }
@@ -105,7 +105,7 @@ public class CompanyService {
         String generatedId = UUID.randomUUID().toString();
         company.setId(generatedId); // Update this line based on how you want to manage IDs
 
-        Resource companyClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Company");
+        Resource companyClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagnie");
         Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, companyClass);
 
         individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"), company.getNom());

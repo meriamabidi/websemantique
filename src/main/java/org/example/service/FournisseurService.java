@@ -41,14 +41,18 @@ public class FournisseurService {
         List<Fournisseur> fournisseurs = new ArrayList<>();
         Map<String, Fournisseur> fournisseurMap = new HashMap<>();
 
+        // Log du modèle RDF
+        logger.info("Modèle RDF contenant : " + ontModel.listStatements().toList());
+
+        // Requête SPARQL pour récupérer tous les Fournisseurs_de_Dechet
         String sparqlQueryString = """
-    PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
-    SELECT ?fournisseur ?nom ?adresse ?contact WHERE {
-        ?fournisseur a ns:Fournisseur .
-        OPTIONAL { ?fournisseur ns:nom ?nom . }
-        OPTIONAL { ?fournisseur ns:adresse ?adresse . }
-        OPTIONAL { ?fournisseur ns:contact ?contact . }
-    }
+        PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
+        SELECT ?fournisseur ?contact ?nom WHERE {
+            ?fournisseur a ns:Fournisseur_de_Dechet .
+            OPTIONAL { ?fournisseur ns:contact ?contact . }
+            OPTIONAL { ?fournisseur ns:nom ?nom . }
+            OPTIONAL { ?fournisseur ns:adresse ?adresse . }
+        }
     """;
 
         Query query = QueryFactory.create(sparqlQueryString);
@@ -56,42 +60,49 @@ public class FournisseurService {
         try (QueryExecution qexec = QueryExecutionFactory.create(query, ontModel)) {
             ResultSet results = qexec.execSelect();
 
+            if (!results.hasNext()) {
+                logger.warn("Aucun fournisseur de déchets trouvé.");
+            }
+
+            // Traiter les résultats
             while (results.hasNext()) {
                 QuerySolution soln = results.nextSolution();
                 String fournisseurUri = soln.get("fournisseur").toString();
-                String idValue = fournisseurUri.contains("#") ? fournisseurUri.substring(fournisseurUri.lastIndexOf('#') + 1)
-                        : fournisseurUri.substring(fournisseurUri.lastIndexOf('/') + 1);
+                String idValue = fournisseurUri.contains("#") ?
+                        fournisseurUri.substring(fournisseurUri.lastIndexOf('#') + 1) :
+                        fournisseurUri.substring(fournisseurUri.lastIndexOf('/') + 1);
 
+                // Créer ou récupérer l'objet FournisseurDeDechet
                 Fournisseur fournisseur = fournisseurMap.getOrDefault(fournisseurUri, new Fournisseur());
-                fournisseur.setId(idValue);
+                fournisseur.setId(idValue); // Définir l'ID extrait
 
-                if (soln.contains("nom")) {
-                    fournisseur.setNom(soln.get("nom").toString());
+                // Définir les propriétés si elles existent
+                if (soln.contains("contact") && soln.get("contact").isLiteral()) {
+                    fournisseur.setContact(soln.get("contact").asLiteral().getString());
                 }
-                if (soln.contains("adresse")) {
-                    fournisseur.setAdresse(soln.get("adresse").toString());
-                }
-                if (soln.contains("contact")) {
-                    fournisseur.setContact(soln.get("contact").toString());
+                if (soln.contains("nom") && soln.get("nom").isLiteral()) {
+                    fournisseur.setNom(soln.get("nom").asLiteral().getString());
                 }
 
-                fournisseurMap.put(fournisseurUri, fournisseur);
+                fournisseurMap.put(fournisseurUri, fournisseur); // Stocker le fournisseur dans la map
             }
         } catch (Exception e) {
-            logger.error("Error retrieving fournisseurs: ", e);
+            logger.error("Erreur lors de la récupération des fournisseurs : ", e);
         }
 
-        fournisseurs.addAll(fournisseurMap.values());
-        logger.info("Total fournisseurs retrieved: " + fournisseurs.size());
+        fournisseurs.addAll(fournisseurMap.values()); // Collecter tous les FournisseurDeDechet dans la liste finale
+        logger.info("Total fournisseurs récupérés : " + fournisseurs.size());
+
         return fournisseurs;
     }
+
 
     // Save new Fournisseur
     public void save(Fournisseur fournisseur) {
         String generatedId = UUID.randomUUID().toString();
         fournisseur.setId(generatedId);
 
-        Resource fournisseurClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Fournisseur");
+        Resource fournisseurClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Fournisseur_de_Dechet");
         Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, fournisseurClass);
 
         individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"), fournisseur.getNom());

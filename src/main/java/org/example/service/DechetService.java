@@ -76,7 +76,7 @@ public class DechetService {
                     dechet.setPoids(soln.get("poids").asLiteral().getDouble());
                 }
                 if (soln.contains("dateCollecte")) {
-                    dechet.setDateCollecte(LocalDate.parse(soln.get("dateCollecte").toString()));
+                    dechet.setDateCollecte(soln.get("dateCollecte").toString());
                 }
                 if (soln.contains("description")) {
                     dechet.setDescription(soln.get("description").toString());
@@ -144,7 +144,7 @@ public class DechetService {
         dechet.setId(ind.getLocalName());
         dechet.setType(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type")).toString());
         dechet.setPoids(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#poids")).asLiteral().getDouble());
-        dechet.setDateCollecte(LocalDate.parse(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dateCollecte")).toString()));
+        dechet.setDateCollecte(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dateCollecte")).toString());
         dechet.setDescription(ind.getPropertyValue(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description")).toString());
         return dechet;
     }

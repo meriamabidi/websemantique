@@ -37,20 +37,19 @@ public class CentreRecyclageService {
             ontModel.read(in, null);
         }
     }
-
     public List<CentreRecyclage> findAll() {
         List<CentreRecyclage> centres = new ArrayList<>();
         Map<String, CentreRecyclage> centreMap = new HashMap<>();
 
         // SPARQL query to retrieve all Centre_Recyclage individuals with their properties
         String sparqlQueryString = """
-    PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
-    SELECT ?centre ?capacite ?localisation ?nom WHERE {
-        ?centre a ns:Centre_Recyclage .
-        OPTIONAL { ?centre ns:capacite ?capacite . }
-        OPTIONAL { ?centre ns:localisation ?localisation . }
-        OPTIONAL { ?centre ns:nom ?nom . }
-    }
+        PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
+        SELECT ?centre ?capacite ?localisation ?nom WHERE {
+            ?centre a ns:Centre_de_Recyclage .
+            OPTIONAL { ?centre ns:capacite ?capacite . }
+            OPTIONAL { ?centre ns:localisation ?localisation . }
+            OPTIONAL { ?centre ns:nom ?nom . }
+        }
     """;
 
         Query query = QueryFactory.create(sparqlQueryString);
@@ -70,15 +69,29 @@ public class CentreRecyclageService {
                 CentreRecyclage centre = centreMap.getOrDefault(centreUri, new CentreRecyclage());
                 centre.setId(idValue); // Set the extracted ID
 
+                // Log the current centre being processed
+                logger.info("Processing centre URI: " + centreUri);
+
                 // Set properties if they exist
                 if (soln.contains("capacite") && soln.get("capacite").isLiteral()) {
                     centre.setCapacite(soln.get("capacite").asLiteral().getInt());
+                    logger.info("Capacité found: " + centre.getCapacite());
+                } else {
+                    logger.warn("Capacité not found for centre: " + centreUri);
                 }
+
                 if (soln.contains("localisation") && soln.get("localisation").isLiteral()) {
                     centre.setLocalisation(soln.get("localisation").asLiteral().getString());
+                    logger.info("Localisation found: " + centre.getLocalisation());
+                } else {
+                    logger.warn("Localisation not found for centre: " + centreUri);
                 }
+
                 if (soln.contains("nom") && soln.get("nom").isLiteral()) {
                     centre.setNom(soln.get("nom").asLiteral().getString());
+                    logger.info("Nom found: " + centre.getNom());
+                } else {
+                    logger.warn("Nom not found for centre: " + centreUri);
                 }
 
                 centreMap.put(centreUri, centre); // Store the centre in the map
@@ -89,8 +102,17 @@ public class CentreRecyclageService {
 
         centres.addAll(centreMap.values()); // Collect all CentreRecyclage instances into the final list
         logger.info("Total centres retrieved: " + centres.size());
+
+        // Log the details of the retrieved centres
+        for (CentreRecyclage centre : centres) {
+            logger.info("Centre retrieved: ID=" + centre.getId() + ", Nom=" + centre.getNom() +
+                    ", Localisation=" + centre.getLocalisation() + ", Capacité=" + centre.getCapacite());
+        }
+
         return centres;
     }
+
+
 
     public void update(CentreRecyclage centre) {
         Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + centre.getId());
@@ -116,7 +138,7 @@ public class CentreRecyclageService {
         String generatedId = UUID.randomUUID().toString();
         centre.setId(generatedId); // Now set ID as String
 
-        Resource centreClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_Recyclage");
+        Resource centreClass = ontModel.getOntClass("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_de_Recyclage");
         Individual individual = ontModel.createIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + generatedId, centreClass);
 
         individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#capacite"), String.valueOf(centre.getCapacite()));
