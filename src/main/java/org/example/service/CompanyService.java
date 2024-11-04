@@ -86,17 +86,47 @@ public class CompanyService {
     }
 
     public void update(Company company) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + company.getId());
-        if (individual != null) {
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#adresse"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#contact"));
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String individualUri = baseUri + company.getId();
+        Logger logger = LoggerFactory.getLogger(CompanyService.class);
 
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"), company.getNom());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#adresse"), company.getAdresse());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#contact"), company.getContact());
+        String sparqlDelete = String.format(
+                "PREFIX ns: <%s> " +
+                        "DELETE { " +
+                        "    <%s> ns:nom ?nom ; " +
+                        "           ns:adresse ?adresse ; " +
+                        "           ns:contact ?contact . " +
+                        "} WHERE { " +
+                        "    <%s> ns:nom ?nom . " +
+                        "    <%s> ns:adresse ?adresse . " +
+                        "    <%s> ns:contact ?contact . " +
+                        "}",
+                baseUri, individualUri, individualUri, individualUri, individualUri
+        );
+
+        String sparqlInsert = String.format(
+                "PREFIX ns: <%s> " +
+                        "INSERT DATA { " +
+                        "    <%s> ns:nom \"%s\" ; " +
+                        "           ns:adresse \"%s\" ; " +
+                        "           ns:contact \"%s\" . " +
+                        "}",
+                baseUri, individualUri, company.getNom(), company.getAdresse(), company.getContact()
+        );
+
+        // Wrap the ontModel in a Dataset
+        Dataset dataset = DatasetFactory.create(ontModel);
+
+        try {
+            UpdateRequest deleteRequest = UpdateFactory.create(sparqlDelete);
+            UpdateExecutionFactory.create(deleteRequest, dataset).execute();
+
+            UpdateRequest insertRequest = UpdateFactory.create(sparqlInsert);
+            UpdateExecutionFactory.create(insertRequest, dataset).execute();
 
             saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error updating Company: ", e);
         }
     }
 
@@ -166,21 +196,37 @@ public class CompanyService {
 
     public void deleteById(String id) {
         String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String individualUri = baseUri + id;
+
+        // Requête SPARQL pour supprimer toutes les propriétés liées à l'individu
         String sparqlUpdate = String.format(
                 "PREFIX ex: <%s> " +
                         "DELETE WHERE { " +
-                        "    ex:%s ?p ?o . " +
-                        "    ?s ?p2 ex:%s . " +
+                        "    <%s> ?p ?o . " +
                         "}",
-                baseUri, id, id
+                baseUri, individualUri
         );
 
-        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
         try {
-            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, (Dataset) ontModel);
-            qexec.execute();
+            // Création de la requête de mise à jour SPARQL
+            UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+
+            // Utilisation du modèle pour créer un Dataset
+            Dataset dataset = DatasetFactory.create(ontModel);
+
+            // Logs de débogage
+            logger.info("Tentative de suppression de la Company avec l'ID : " + id);
+
+            // Exécution de la requête de suppression
+            UpdateExecutionFactory.create(updateRequest, dataset).execute();
+
+            // Log de confirmation de suppression
+            logger.info("Suppression réussie de la Company avec l'ID : " + id);
+
         } catch (Exception e) {
-            logger.error("Error deleting CollectDechet by ID: ", e);
+            // Log d'erreur et propagation de l'exception si nécessaire
+            logger.error("Erreur lors de la suppression de la Company avec l'ID : " + id, e);
+            throw new RuntimeException("L'opération de suppression a échoué", e);
         }
     }
 

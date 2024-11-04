@@ -46,4 +46,14 @@ public class CollectDechetController {
         collectDechetService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<List<CollectDechet>> searchCollectDechets(@PathVariable String keyword) {
+        List<CollectDechet> foundCentreRecyclages = collectDechetService.searchCollectDechets(keyword);
+        if (foundCentreRecyclages.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(foundCentreRecyclages, HttpStatus.OK);
+    }
 }

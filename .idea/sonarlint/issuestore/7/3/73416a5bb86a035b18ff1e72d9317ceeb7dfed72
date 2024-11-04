@@ -1,0 +1,38 @@
+
+h	java:S112ı"FDefine and throw a dedicated exception instead of using a generic one.(¨÷­èıÿÿÿÿ8Ô¡­¨®2
+c
+java:S1192I"FDefine a constant instead of duplicating this literal "poids" 4 times.(‡·ÙÆ8¢Ã‘¢®2
+i
+java:S1192O"LDefine a constant instead of duplicating this literal "description" 4 times.(‘äÆ°8£Ã‘¢®2
+f
+java:S1192R"JDefine a constant instead of duplicating this literal "categorie" 4 times.(Àïš8£Ã‘¢®2
+t
+java:S1192”"QDefine a constant instead of duplicating this literal "PREFIX ns: <%s> " 3 times.(éßİÔşÿÿÿÿ8§ÿè©®2
+«
+java:S1192b"ˆDefine a constant instead of duplicating this literal "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" 4 times.(ëÉ ¿ıÿÿÿÿ8¤Ã‘¢®2
+~
+java:S2629]"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(íÁçÇşÿÿÿÿ8¬Ã‘¢®2
+Z
+java:S2629ò"7Use the built-in formatting to construct this argument.(­ğĞùÿÿÿÿ8ğ¡­¨®2
+Z
+java:S2629ø"7Use the built-in formatting to construct this argument.(œÑÆäıÿÿÿÿ8ğ¡­¨®2
+T
+java:S2589#"7Remove this expression which always evaluates to "true"(¢õ§˜8ŒÅ‘¢®2
+^
+java:S1075"ARefactor your code to get this URI from a customizable parameter.(ÛÿØ¼8‘Å‘¢®2
+H
+java:S1874""+Remove this use of "get"; it is deprecated.(•ù¹é8•Å‘¢®2
+c
+java:S3457]"AFormat specifiers should be used instead of string concatenation.(íÁçÇşÿÿÿÿ8·Å‘¢®2
+]
+java:S1117­":Rename "logger" which hides the field declared at line 24.(½âñóùÿÿÿÿ8•ÙÍ¨®2
+d
+java:S3457ò"AFormat specifiers should be used instead of string concatenation.(­ğĞùÿÿÿÿ8¾¨­¨®2
+d
+java:S3457ø"AFormat specifiers should be used instead of string concatenation.(œÑÆäıÿÿÿÿ8Ã¨­¨®2
+v
+java:S2139ú"XEither log this exception and handle it, or rethrow it with some contextual information.(”ı¾8É¨­¨®2
+a
+java:S1128"?Remove this unused import 'org.apache.jena.rdf.model.Resource'.(–’ÿÇûÿÿÿÿ8ÚÅ‘¢®2
+`
+java:S1144"=Remove this unused private "mapIndividualToMateriaux" method.(ø÷¡«úÿÿÿÿ8ÛÅ‘¢®2

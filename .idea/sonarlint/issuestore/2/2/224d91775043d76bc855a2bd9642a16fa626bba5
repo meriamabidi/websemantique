@@ -1,0 +1,42 @@
+
+h	java:S112ó"FDefine and throw a dedicated exception instead of using a generic one.(¨÷­èıÿÿÿÿ8Ÿ‰ª¨®2
+k
+java:S1192H"IDefine a constant instead of duplicating this literal "quantite" 6 times.(”°ùÿúÿÿÿÿ8Ğîª§®2
+o
+java:S1192’"QDefine a constant instead of duplicating this literal "PREFIX ex: <%s> " 3 times.(ìÆˆú8Ïîª§®2
+«
+java:S1192a"ˆDefine a constant instead of duplicating this literal "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" 4 times.(ëÉ ¿ıÿÿÿÿ8¶£Ò¨®2
+~
+java:S2629\"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(ñÅÆ«şÿÿÿÿ8Óîª§®2
+Z
+java:S2629è"7Use the built-in formatting to construct this argument.(­ğĞùÿÿÿÿ8Õ‰ª¨®2
+Z
+java:S2629î"7Use the built-in formatting to construct this argument.(œÑÆäıÿÿÿÿ8Ö‰ª¨®2
+
+java:S2629¼"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(ùÂ•Óıÿÿÿÿ8­ë«§®2
+T
+java:S2589&"7Remove this expression which always evaluates to "true"(¢õ§˜8¾ïª§®2
+^
+java:S1075"ARefactor your code to get this URI from a customizable parameter.(ÛÿØ¼8Áïª§®2
+H
+java:S1874%"+Remove this use of "get"; it is deprecated.(•ù¹é8Èïª§®2
+c
+java:S3457\"AFormat specifiers should be used instead of string concatenation.(ñÅÆ«şÿÿÿÿ8Óïª§®2
+\
+java:S1117c":Rename "logger" which hides the field declared at line 33.(Î‹Îˆúÿÿÿÿ8Ú§Ò¨®2
+d
+java:S3457è"AFormat specifiers should be used instead of string concatenation.(­ğĞùÿÿÿÿ8ƒª¨®2
+d
+java:S3457î"AFormat specifiers should be used instead of string concatenation.(œÑÆäıÿÿÿÿ8‰ª¨®2
+v
+java:S2139ğ"XEither log this exception and handle it, or rethrow it with some contextual information.(”ı¾8‹ª¨®2
+d
+java:S3457¼"AFormat specifiers should be used instead of string concatenation.(ùÂ•Óıÿÿÿÿ8Ãí«§®2
+a
+java:S1128"?Remove this unused import 'org.apache.jena.rdf.model.Resource'.(–’ÿÇûÿÿÿÿ8ëïª§®2
+R
+java:S1128"5Remove this unused import 'java.text.ParseException'.(ñ®ï•8ëïª§®2
+T
+java:S1128"7Remove this unused import 'java.text.SimpleDateFormat'.(ú¡ÙÛ8ëïª§®2
+_
+java:S1144ø"<Remove this unused private "mapIndividualToCollecte" method.(ö…¤’ùÿÿÿÿ8ëïª§®2

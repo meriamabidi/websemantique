@@ -1,0 +1,38 @@
+
+h	java:S112ğ"FDefine and throw a dedicated exception instead of using a generic one.(¨÷­èıÿÿÿÿ8İÙ­¨®2
+h
+java:S1192L"FDefine a constant instead of duplicating this literal "temps" 4 times.(üÑëıÿÿÿÿ8¦²‘¢®2
+i
+java:S1192I"LDefine a constant instead of duplicating this literal "description" 4 times.(‘äÆ°8¥²‘¢®2
+s
+java:S1192c"QDefine a constant instead of duplicating this literal "PREFIX ns: <%s> " 3 times.(éßİÔşÿÿÿÿ8©¢Ì¨®2
+c
+java:S1192O"FDefine a constant instead of duplicating this literal "couts" 4 times.(™£Ê8§²‘¢®2
+«
+java:S1192^"ˆDefine a constant instead of duplicating this literal "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" 4 times.(ëÉ ¿ıÿÿÿÿ8©¢Ì¨®2
+y
+java:S2629Z"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(Ê¦Õæ8¸²‘¢®2
+Z
+java:S2629å"7Use the built-in formatting to construct this argument.(­ğĞùÿÿÿÿ8úÙ­¨®2
+Z
+java:S2629ë"7Use the built-in formatting to construct this argument.(œÑÆäıÿÿÿÿ8ûÙ­¨®2
+T
+java:S2589$"7Remove this expression which always evaluates to "true"(¢õ§˜8õ¶‘¢®2
+^
+java:S1075"ARefactor your code to get this URI from a customizable parameter.(ÛÿØ¼8„·‘¢®2
+H
+java:S1874#"+Remove this use of "get"; it is deprecated.(•ù¹é8›·‘¢®2
+^
+java:S3457Z"AFormat specifiers should be used instead of string concatenation.(Ê¦Õæ8Í·‘¢®2
+W
+java:S1117`":Rename "logger" which hides the field declared at line 31.(µœ…·8¶£Ì¨®2
+d
+java:S3457å"AFormat specifiers should be used instead of string concatenation.(­ğĞùÿÿÿÿ8‡ß­¨®2
+d
+java:S3457ë"AFormat specifiers should be used instead of string concatenation.(œÑÆäıÿÿÿÿ8Šß­¨®2
+v
+java:S2139í"XEither log this exception and handle it, or rethrow it with some contextual information.(”ı¾8ß­¨®2
+a
+java:S1128"?Remove this unused import 'org.apache.jena.rdf.model.Resource'.(–’ÿÇûÿÿÿÿ8˜¸‘¢®2
+^
+java:S1144õ";Remove this unused private "mapIndividualToMethode" method.(§°ùéüÿÿÿÿ8™¸‘¢®2

@@ -14,8 +14,8 @@
   <owl:Class rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_Recyclage_Metallique">
     <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_de_Recyclage"/>
   </owl:Class>
-  <owl:Class rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet"/>
   <owl:Class rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Fournisseur_de_Dechet"/>
+  <owl:Class rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet"/>
   <owl:Class rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Semi_Remorque">
     <rdfs:subClassOf>
       <owl:Class rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule_de_collecte"/>
@@ -29,10 +29,10 @@
   <owl:Class rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Valorisation_Energetique">
     <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement"/>
   </owl:Class>
+  <owl:Class rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
   <owl:Class rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Recyclage">
     <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement"/>
   </owl:Class>
-  <owl:Class rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
   <owl:Class rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Plastique_Recycle">
     <rdfs:subClassOf rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
   </owl:Class>
@@ -106,10 +106,6 @@
     <rdfs:range rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet"/>
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule_de_collecte"/>
   </owl:ObjectProperty>
-  <owl:ObjectProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#estTraiterPar">
-    <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet"/>
-    <rdfs:range rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement"/>
-  </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#possède">
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagnie"/>
     <rdfs:range rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule"/>
@@ -117,6 +113,10 @@
   <owl:ObjectProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#est_Acheminé_vers">
     <rdfs:range rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_de_Recyclage"/>
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet"/>
+  </owl:ObjectProperty>
+  <owl:ObjectProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#estTraiterPar">
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet"/>
+    <rdfs:range rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement"/>
   </owl:ObjectProperty>
   <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#cout">
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement"/>
@@ -128,18 +128,12 @@
   </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#adresse">
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagnie"/>
-<<<<<<< HEAD
-=======
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Fournisseur_de_Dechet"/>
->>>>>>> f8e3d6a05398a62be771d4ce3b5b3ff10197e688
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date_collecte">
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet"/>
-<<<<<<< HEAD
-=======
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
->>>>>>> f8e3d6a05398a62be771d4ce3b5b3ff10197e688
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#poids">
@@ -155,13 +149,6 @@
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#collecte_dechet"/>
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </owl:DatatypeProperty>
-  <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type">
-    <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet"/>
-    <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
-    <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement"/>
-    <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule"/>
-    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-  </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#localisation">
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_de_Recyclage"/>
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule"/>
@@ -169,6 +156,13 @@
   </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date">
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#collecte_dechet"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </owl:DatatypeProperty>
+  <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type">
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet"/>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement"/>
+    <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule"/>
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#contact">
@@ -182,23 +176,16 @@
   <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#zone_operation">
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule_de_collecte"/>
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-<<<<<<< HEAD
   </owl:DatatypeProperty>
-  <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#qualite">
+  <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#categorie">
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-=======
->>>>>>> f8e3d6a05398a62be771d4ce3b5b3ff10197e688
   </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description">
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet"/>
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement"/>
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule"/>
-    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-  </owl:DatatypeProperty>
-  <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#categorie">
-    <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#capacite">
@@ -217,225 +204,11 @@
     <rdfs:domain rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement"/>
     <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
   </owl:DatatypeProperty>
-<<<<<<< HEAD
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#vehicule1">
-    <untitled-ontology-5:type>bmw</untitled-ontology-5:type>
-    <untitled-ontology-5:capacite>100</untitled-ontology-5:capacite>
-    <untitled-ontology-5:localisation>localisation vehicule</untitled-ontology-5:localisation>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule"/>
-  </owl:NamedIndividual>
-=======
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#tesla">
-    <untitled-ontology-5:description>voiture du pdg</untitled-ontology-5:description>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule_de_transport"/>
-  </owl:NamedIndividual>
-  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#02833ef7-2673-47e1-a4b4-af32ad0ff532">
-    <untitled-ontology-5:contact>+216548264</untitled-ontology-5:contact>
-    <untitled-ontology-5:adresse>ff</untitled-ontology-5:adresse>
-    <untitled-ontology-5:nom>fournisseur3</untitled-ontology-5:nom>
-  </untitled-ontology-5:Fournisseur>
->>>>>>> f8e3d6a05398a62be771d4ce3b5b3ff10197e688
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dechet3">
-    <untitled-ontology-5:date_collecte>12-05-2024</untitled-ontology-5:date_collecte>
-    <untitled-ontology-5:description>c'est un dechet electronique</untitled-ontology-5:description>
-    <untitled-ontology-5:type>électroniques</untitled-ontology-5:type>
-<<<<<<< HEAD
-    <untitled-ontology-5:poids>500</untitled-ontology-5:poids>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet"/>
-  </owl:NamedIndividual>
   <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#fournisseur3">
-    <untitled-ontology-5:nom>fournisseur3</untitled-ontology-5:nom>
     <untitled-ontology-5:contact>+216548264</untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse>null</untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom>fournisseur111</untitled-ontology-5:nom>
     <untitled-ontology-5:livre_à>
-      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#centre_plastique_sfax">
-        <untitled-ontology-5:nom>sfaax recy</untitled-ontology-5:nom>
-        <untitled-ontology-5:localisation>sfax</untitled-ontology-5:localisation>
-        <untitled-ontology-5:capacite>200</untitled-ontology-5:capacite>
-        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_Recyclage_Plastique"/>
-      </owl:NamedIndividual>
-    </untitled-ontology-5:livre_à>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Fournisseur_de_Dechet"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#collecte_dechet2">
-    <untitled-ontology-5:lieu>tunis</untitled-ontology-5:lieu>
-    <untitled-ontology-5:etat>terminé</untitled-ontology-5:etat>
-    <untitled-ontology-5:date>22-10-2024</untitled-ontology-5:date>
-    <untitled-ontology-5:quantite>100</untitled-ontology-5:quantite>
-    <untitled-ontology-5:contient>
-      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dechet2">
-        <untitled-ontology-5:date_collecte>12-12-2024</untitled-ontology-5:date_collecte>
-        <untitled-ontology-5:type>dangereux</untitled-ontology-5:type>
-        <untitled-ontology-5:description>c'est un dechet </untitled-ontology-5:description>
-        <untitled-ontology-5:poids>200</untitled-ontology-5:poids>
-        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet"/>
-      </owl:NamedIndividual>
-    </untitled-ontology-5:contient>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#collecte_dechet"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#compagnie3">
-    <untitled-ontology-5:contact>support@ecomovelogistics.com</untitled-ontology-5:contact>
-    <untitled-ontology-5:adresse>102 Boulevard de l’Environnement, </untitled-ontology-5:adresse>
-    <untitled-ontology-5:nom>EcoMove Logistics</untitled-ontology-5:nom>
-    <untitled-ontology-5:possède>
-      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#traks_1">
-        <untitled-ontology-5:type>i24</untitled-ontology-5:type>
-        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Traks"/>
-      </owl:NamedIndividual>
-    </untitled-ontology-5:possède>
-    <untitled-ontology-5:possède>
-      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#traks_2">
-        <untitled-ontology-5:type>i25</untitled-ontology-5:type>
-        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Traks"/>
-      </owl:NamedIndividual>
-    </untitled-ontology-5:possède>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagnie"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#methode_de_traitement1">
-    <untitled-ontology-5:type>Mécanique</untitled-ontology-5:type>
-    <untitled-ontology-5:description>Séparation des déchets recyclables (plastiques, métaux, papier) à l'aide de techniques mécaniques.</untitled-ontology-5:description>
-    <untitled-ontology-5:nom>Tri mécanique des déchets</untitled-ontology-5:nom>
-    <untitled-ontology-5:cout>50</untitled-ontology-5:cout>
-    <untitled-ontology-5:temps>2</untitled-ontology-5:temps>
-    <untitled-ontology-5:nom>Compostage</untitled-ontology-5:nom>
-    <untitled-ontology-5:produit>
-      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#1_ton_Bouteille_Plastique1">
-        <untitled-ontology-5:date_collecte>10-10-2024</untitled-ontology-5:date_collecte>
-        <untitled-ontology-5:poids>1 </untitled-ontology-5:poids>
-        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
-      </owl:NamedIndividual>
-    </untitled-ontology-5:produit>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#GreenHaul_Transpot">
-    <untitled-ontology-5:nom>GreenHaul Transport</untitled-ontology-5:nom>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagnie"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#peugot_partner">
-    <untitled-ontology-5:description>voiture du responsable</untitled-ontology-5:description>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule_de_transport"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#methode_de_traitement2">
-    <untitled-ontology-5:description> Transformation des déchets organiques en compost grâce à la décomposition biologique.</untitled-ontology-5:description>
-    <untitled-ontology-5:cout> 30</untitled-ontology-5:cout>
-    <untitled-ontology-5:nom>Compostage</untitled-ontology-5:nom>
-    <untitled-ontology-5:type>Biologique</untitled-ontology-5:type>
-    <untitled-ontology-5:temps>3</untitled-ontology-5:temps>
-    <untitled-ontology-5:produit>
-      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#500kg_carton1">
-        <untitled-ontology-5:date_collecte>1-10-2023</untitled-ontology-5:date_collecte>
-        <untitled-ontology-5:poids>500</untitled-ontology-5:poids>
-        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
-      </owl:NamedIndividual>
-    </untitled-ontology-5:produit>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#centre_de_recyclage">
-    <untitled-ontology-5:nom>centre de france</untitled-ontology-5:nom>
-    <untitled-ontology-5:capacite>500</untitled-ontology-5:capacite>
-    <untitled-ontology-5:localisation>france</untitled-ontology-5:localisation>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_de_Recyclage"/>
-  </owl:NamedIndividual>
-  <untitled-ontology-5:Fournisseur_de_Dechet rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#8bf3a065-0cc7-4720-85ad-af892f6fd94c">
-    <untitled-ontology-5:nom>fournisseur3</untitled-ontology-5:nom>
-    <untitled-ontology-5:adresse>eeeeeeeeeeeeeeeeeeeeeeeeeeeeee</untitled-ontology-5:adresse>
-    <untitled-ontology-5:contact>+216548264</untitled-ontology-5:contact>
-  </untitled-ontology-5:Fournisseur_de_Dechet>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dechet1">
-    <untitled-ontology-5:description>c'est un dechet c'est un dechet </untitled-ontology-5:description>
-    <untitled-ontology-5:date_collecte>12-12-2024</untitled-ontology-5:date_collecte>
-    <untitled-ontology-5:poids>100</untitled-ontology-5:poids>
-    <untitled-ontology-5:type>industriels</untitled-ontology-5:type>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Dechet"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#methode_de_traitement3">
-    <untitled-ontology-5:type>Thermique</untitled-ontology-5:type>
-    <untitled-ontology-5:nom>Pyrolyse des plastiques</untitled-ontology-5:nom>
-    <untitled-ontology-5:cout>200</untitled-ontology-5:cout>
-    <untitled-ontology-5:temps>4</untitled-ontology-5:temps>
-    <untitled-ontology-5:description>Décomposition des plastiques en gaz et liquides par chauffage en absence d'oxygène.</untitled-ontology-5:description>
-    <untitled-ontology-5:produit>
-      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#1_ton_canette_aluminium">
-        <untitled-ontology-5:poids>1</untitled-ontology-5:poids>
-        <untitled-ontology-5:date_collecte>20-02-2024</untitled-ontology-5:date_collecte>
-        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
-      </owl:NamedIndividual>
-    </untitled-ontology-5:produit>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Methode_de_traitement"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#camion_1">
-    <untitled-ontology-5:type>s1</untitled-ontology-5:type>
-    <untitled-ontology-5:zone_operation>tunis</untitled-ontology-5:zone_operation>
-    <untitled-ontology-5:capacite>500</untitled-ontology-5:capacite>
-    <untitled-ontology-5:livreA>
-      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#centre_metal__tunis">
-        <untitled-ontology-5:localisation>tunis</untitled-ontology-5:localisation>
-        <untitled-ontology-5:capacite>300</untitled-ontology-5:capacite>
-        <untitled-ontology-5:nom>tounes</untitled-ontology-5:nom>
-        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_Recyclage_Metallique"/>
-      </owl:NamedIndividual>
-    </untitled-ontology-5:livreA>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Camion_Benne"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagie2">
-    <untitled-ontology-5:nom>RecycleRide</untitled-ontology-5:nom>
-    <untitled-ontology-5:adresse>23 Route Verte, Genève, Suisse</untitled-ontology-5:adresse>
-    <untitled-ontology-5:contact> info@recycleride.ch</untitled-ontology-5:contact>
-    <untitled-ontology-5:possède>
-      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#tesla">
-        <untitled-ontology-5:description>voiture du pdg</untitled-ontology-5:description>
-        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule_de_transport"/>
-      </owl:NamedIndividual>
-    </untitled-ontology-5:possède>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagnie"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagnie1">
-    <untitled-ontology-5:adresse>88 Avenue Écologique, Paris, France</untitled-ontology-5:adresse>
-    <untitled-ontology-5:nom>TerraTrans Solutions</untitled-ontology-5:nom>
-    <untitled-ontology-5:contact>contact@terratrans.com</untitled-ontology-5:contact>
-    <untitled-ontology-5:possède>
-      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#semi_1">
-        <untitled-ontology-5:capacite>200</untitled-ontology-5:capacite>
-        <untitled-ontology-5:zone_operation>monastir sfax sousse</untitled-ontology-5:zone_operation>
-        <untitled-ontology-5:type>m2</untitled-ontology-5:type>
-        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Semi_Remorque"/>
-      </owl:NamedIndividual>
-    </untitled-ontology-5:possède>
-    <untitled-ontology-5:possède>
-      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#semi_2">
-        <untitled-ontology-5:type>m3</untitled-ontology-5:type>
-        <untitled-ontology-5:zone_operation>medenine gabes tatouine</untitled-ontology-5:zone_operation>
-        <untitled-ontology-5:capacite>400</untitled-ontology-5:capacite>
-        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Semi_Remorque"/>
-      </owl:NamedIndividual>
-    </untitled-ontology-5:possède>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagnie"/>
-  </owl:NamedIndividual>
-  <untitled-ontology-5:Fournisseur_de_Dechet rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#6305c1dd-ff95-4f8e-b11b-31302e309aae">
-    <untitled-ontology-5:nom>fournisseur3</untitled-ontology-5:nom>
-    <untitled-ontology-5:adresse>eeeeeeeeeeeeeeeeeeeeeeeeeeeeee</untitled-ontology-5:adresse>
-    <untitled-ontology-5:contact>+216548264</untitled-ontology-5:contact>
-  </untitled-ontology-5:Fournisseur_de_Dechet>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#PapierRecycle_Lot_2">
-    <untitled-ontology-5:poids>500</untitled-ontology-5:poids>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#vehicule2">
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#fournisseur2">
-    <untitled-ontology-5:contact>+21621152485</untitled-ontology-5:contact>
-    <untitled-ontology-5:nom>fournissuer2</untitled-ontology-5:nom>
-    <untitled-ontology-5:livre_à>
-      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#centre_organique_gabes">
-        <untitled-ontology-5:capacite>200</untitled-ontology-5:capacite>
-        <untitled-ontology-5:localisation>gabes</untitled-ontology-5:localisation>
-        <untitled-ontology-5:nom>gabsii</untitled-ontology-5:nom>
-        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_Recyclage_Organique"/>
-      </owl:NamedIndividual>
-    </untitled-ontology-5:livre_à>
-=======
-    <untitled-ontology-5:poids>500</untitled-ontology-5:poids>
-    <untitled-ontology-5:est_Acheminé_vers>
       <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#centre_de_recyclage">
         <untitled-ontology-5:nom>centre de france</untitled-ontology-5:nom>
         <untitled-ontology-5:capacite>500</untitled-ontology-5:capacite>
@@ -464,7 +237,123 @@
         </untitled-ontology-5:utilise>
         <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_de_Recyclage"/>
       </owl:NamedIndividual>
-    </untitled-ontology-5:est_Acheminé_vers>
+    </untitled-ontology-5:livre_à>
+    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Fournisseur_de_Dechet"/>
+  </owl:NamedIndividual>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#3abdb0f1-e7a6-4f74-b9df-22d95ed57c82">
+    <untitled-ontology-5:contact>aaa</untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse>aaa</untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom>aa</untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#4794f407-aa0e-4369-a3ac-56f3df273412">
+    <untitled-ontology-5:contact></untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse></untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom></untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#eb90de4e-3d13-45da-b431-f142761fca74">
+    <untitled-ontology-5:nom></untitled-ontology-5:nom>
+    <untitled-ontology-5:adresse></untitled-ontology-5:adresse>
+    <untitled-ontology-5:contact></untitled-ontology-5:contact>
+  </untitled-ontology-5:Fournisseur>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#838bc581-7e33-41bd-a975-a0250c47fbfe">
+    <untitled-ontology-5:nom>aaa</untitled-ontology-5:nom>
+    <untitled-ontology-5:adresse>aaa</untitled-ontology-5:adresse>
+    <untitled-ontology-5:contact>aaa</untitled-ontology-5:contact>
+  </untitled-ontology-5:Fournisseur>
+  <untitled-ontology-5:Compagnie rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#35393bae-cec8-46a0-b8cf-b7f3f53bf439">
+    <untitled-ontology-5:contact>soukra</untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse>ariana</untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom>compagnie</untitled-ontology-5:nom>
+  </untitled-ontology-5:Compagnie>
+  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#peugot_partner">
+    <untitled-ontology-5:description>voiture du responsable</untitled-ontology-5:description>
+    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule_de_transport"/>
+  </owl:NamedIndividual>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#cee30366-624f-4901-9e5c-8f4d7dc35875">
+    <untitled-ontology-5:nom>aaa</untitled-ontology-5:nom>
+    <untitled-ontology-5:adresse>aaa</untitled-ontology-5:adresse>
+    <untitled-ontology-5:contact>aaa</untitled-ontology-5:contact>
+  </untitled-ontology-5:Fournisseur>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#2062c1ee-f5ae-4815-97cf-36e9704db26b">
+    <untitled-ontology-5:contact></untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse></untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom></untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
+  <untitled-ontology-5:collecte_dechet rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#7ca16dd3-1038-4cba-a90b-1ab2dc58a19f">
+    <untitled-ontology-5:quantite rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >100.0</untitled-ontology-5:quantite>
+    <untitled-ontology-5:etat>en cours</untitled-ontology-5:etat>
+    <untitled-ontology-5:date>30-10-2024</untitled-ontology-5:date>
+    <untitled-ontology-5:lieu>fgggggg</untitled-ontology-5:lieu>
+  </untitled-ontology-5:collecte_dechet>
+  <untitled-ontology-5:collecte_dechet rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#f77eb781-379f-40bf-a3f3-8197f2a695d4">
+    <untitled-ontology-5:lieu>uuuuuuuuuu</untitled-ontology-5:lieu>
+    <untitled-ontology-5:date>30-10-2024</untitled-ontology-5:date>
+    <untitled-ontology-5:etat>en cours</untitled-ontology-5:etat>
+    <untitled-ontology-5:quantite rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
+    >100.0</untitled-ontology-5:quantite>
+  </untitled-ontology-5:collecte_dechet>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#6b340ba0-0f33-4f36-a612-b1e4ab8e5deb">
+    <untitled-ontology-5:contact></untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse></untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom></untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
+  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagie2">
+    <untitled-ontology-5:possède>
+      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#vehicule1">
+        <untitled-ontology-5:type>bmw</untitled-ontology-5:type>
+        <untitled-ontology-5:capacite>100</untitled-ontology-5:capacite>
+        <untitled-ontology-5:localisation>localisation vehicule</untitled-ontology-5:localisation>
+        <untitled-ontology-5:description>description</untitled-ontology-5:description>
+        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule"/>
+      </owl:NamedIndividual>
+    </untitled-ontology-5:possède>
+    <untitled-ontology-5:nom>RecycleRide</untitled-ontology-5:nom>
+    <untitled-ontology-5:adresse>manouba</untitled-ontology-5:adresse>
+    <untitled-ontology-5:contact> info@recycleride.ch</untitled-ontology-5:contact>
+    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagnie"/>
+  </owl:NamedIndividual>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#764e474e-4421-496a-a325-c038868f17b5">
+    <untitled-ontology-5:contact></untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse></untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom></untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
+  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#PapierRecycle_Lot_2">
+    <untitled-ontology-5:nom>nomlmmm</untitled-ontology-5:nom>
+    <untitled-ontology-5:date_collecte>21-04-2015</untitled-ontology-5:date_collecte>
+    <untitled-ontology-5:type>ttypeeee</untitled-ontology-5:type>
+    <untitled-ontology-5:poids>500</untitled-ontology-5:poids>
+    <untitled-ontology-5:categorie>catregorie4</untitled-ontology-5:categorie>
+    <untitled-ontology-5:description>desc</untitled-ontology-5:description>
+    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
+  </owl:NamedIndividual>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#d071480b-1ac3-449b-b1b2-665fef351458">
+    <untitled-ontology-5:nom>fou</untitled-ontology-5:nom>
+    <untitled-ontology-5:adresse>fou</untitled-ontology-5:adresse>
+    <untitled-ontology-5:contact>fou</untitled-ontology-5:contact>
+  </untitled-ontology-5:Fournisseur>
+  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#fournisseur1">
+    <untitled-ontology-5:nom>Ecofournisseur2</untitled-ontology-5:nom>
+    <untitled-ontology-5:adresse>adresse1</untitled-ontology-5:adresse>
+    <untitled-ontology-5:contact>+2162525561 </untitled-ontology-5:contact>
+    <untitled-ontology-5:livre_à rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#centre_de_recyclage"/>
+    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Fournisseur_de_Dechet"/>
+  </owl:NamedIndividual>
+  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#tesla">
+    <untitled-ontology-5:description>voiture du pdg</untitled-ontology-5:description>
+    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule_de_transport"/>
+  </owl:NamedIndividual>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#02833ef7-2673-47e1-a4b4-af32ad0ff532">
+    <untitled-ontology-5:contact>+216548264</untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse>ff</untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom>fournisseur3</untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
+  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dechet3">
+    <untitled-ontology-5:date_collecte>12-05-2024</untitled-ontology-5:date_collecte>
+    <untitled-ontology-5:description>c'est un dechet electronique</untitled-ontology-5:description>
+    <untitled-ontology-5:type>électroniques</untitled-ontology-5:type>
+    <untitled-ontology-5:poids>500</untitled-ontology-5:poids>
+    <untitled-ontology-5:est_Acheminé_vers rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#centre_de_recyclage"/>
     <untitled-ontology-5:estTraiterPar>
       <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#methode_de_traitement3">
         <untitled-ontology-5:type>Thermique</untitled-ontology-5:type>
@@ -493,13 +382,6 @@
     <untitled-ontology-5:zone_operation>medenine gabes tatouine</untitled-ontology-5:zone_operation>
     <untitled-ontology-5:capacite>400</untitled-ontology-5:capacite>
     <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Semi_Remorque"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#fournisseur3">
-    <untitled-ontology-5:adresse>adresse3</untitled-ontology-5:adresse>
-    <untitled-ontology-5:nom>fournisseur3</untitled-ontology-5:nom>
-    <untitled-ontology-5:contact>+216548264</untitled-ontology-5:contact>
-    <untitled-ontology-5:livre_à rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#centre_de_recyclage"/>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Fournisseur_de_Dechet"/>
   </owl:NamedIndividual>
   <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#collecte_dechet2">
     <untitled-ontology-5:lieu>tunis</untitled-ontology-5:lieu>
@@ -539,10 +421,30 @@
     </untitled-ontology-5:contient>
     <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#collecte_dechet"/>
   </owl:NamedIndividual>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#d154b2cf-45e6-4cea-b68e-e01b5799a7db">
+    <untitled-ontology-5:contact></untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse></untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom></untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#0b216662-2dcb-481c-a12c-b668d07e69b4">
+    <untitled-ontology-5:contact></untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse></untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom></untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
   <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#traks_1">
     <untitled-ontology-5:type>i24</untitled-ontology-5:type>
     <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Traks"/>
   </owl:NamedIndividual>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#20c9c66b-d6e3-4f5d-a517-76f961e6e480">
+    <untitled-ontology-5:contact></untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse></untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom></untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#16e799b8-f349-4040-a044-b25ceb48c66b">
+    <untitled-ontology-5:contact>ooo</untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse>ooo</untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom>ooo</untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
   <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#collecte_dechet1">
     <untitled-ontology-5:etat>en cours</untitled-ontology-5:etat>
     <untitled-ontology-5:date>30-10-2024</untitled-ontology-5:date>
@@ -561,10 +463,11 @@
     </untitled-ontology-5:contient>
     <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#collecte_dechet"/>
   </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#peugot_partner">
-    <untitled-ontology-5:description>voiture du responsable</untitled-ontology-5:description>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule_de_transport"/>
-  </owl:NamedIndividual>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#af1e205f-7407-4874-9c3e-b459fd1874c7">
+    <untitled-ontology-5:contact></untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse></untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom></untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
   <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#centre_plastique_sfax">
     <untitled-ontology-5:nom>sfaax recy</untitled-ontology-5:nom>
     <untitled-ontology-5:localisation>sfax</untitled-ontology-5:localisation>
@@ -572,6 +475,21 @@
     <untitled-ontology-5:utilise rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#methode_de_traitement3"/>
     <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_Recyclage_Plastique"/>
   </owl:NamedIndividual>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#e323a23e-3836-4cd4-8355-df8b19b83a74">
+    <untitled-ontology-5:contact></untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse></untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom></untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#6c04fa04-dd32-401b-8ab8-349261c166ec">
+    <untitled-ontology-5:contact></untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse></untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom></untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#548cad50-ec8d-468b-8ebe-cbfedadc8f50">
+    <untitled-ontology-5:contact>aaa</untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse>aaa</untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom>aaa</untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
   <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#traks_2">
     <untitled-ontology-5:type>i25</untitled-ontology-5:type>
     <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Traks"/>
@@ -582,6 +500,26 @@
     <untitled-ontology-5:etat>en cours</untitled-ontology-5:etat>
     <untitled-ontology-5:quantite>100.0</untitled-ontology-5:quantite>
   </untitled-ontology-5:collecte_dechet>
+  <untitled-ontology-5:Compagnie rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#073b139e-0125-4d19-800d-28edd7117839">
+    <untitled-ontology-5:contact>ariana</untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse>ariana</untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom>company120</untitled-ontology-5:nom>
+  </untitled-ontology-5:Compagnie>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#1d473a87-50de-4c7a-844a-2c726cee8003">
+    <untitled-ontology-5:nom>Fournisseur Test</untitled-ontology-5:nom>
+    <untitled-ontology-5:adresse>123 Rue Exemple, Ville Test</untitled-ontology-5:adresse>
+    <untitled-ontology-5:contact>contact@test.com</untitled-ontology-5:contact>
+  </untitled-ontology-5:Fournisseur>
+  <untitled-ontology-5:Vehicule rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#c7bb618e-251b-4a7f-8640-cf893a94a8ac">
+    <untitled-ontology-5:description>voiture</untitled-ontology-5:description>
+    <untitled-ontology-5:localisation>soukra</untitled-ontology-5:localisation>
+    <untitled-ontology-5:type>golf</untitled-ontology-5:type>
+  </untitled-ontology-5:Vehicule>
+  <untitled-ontology-5:Compagnie rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#a45eb878-57f0-47f8-986f-09cbc06ccd5a">
+    <untitled-ontology-5:contact>charguia</untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse>charguia </untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom>companie </untitled-ontology-5:nom>
+  </untitled-ontology-5:Compagnie>
   <untitled-ontology-5:Materiaux_Recycles rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#b72b7d82-e719-4cac-aa8c-e85301271f26">
     <untitled-ontology-5:type>100.0</untitled-ontology-5:type>
     <untitled-ontology-5:poids>8.0</untitled-ontology-5:poids>
@@ -589,20 +527,6 @@
     <untitled-ontology-5:description>hhhhhhhhhhhh</untitled-ontology-5:description>
     <untitled-ontology-5:categorie>hhhhhhhhhhhh</untitled-ontology-5:categorie>
   </untitled-ontology-5:Materiaux_Recycles>
-  <untitled-ontology-5:collecte_dechet rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#7ca16dd3-1038-4cba-a90b-1ab2dc58a19f">
-    <untitled-ontology-5:quantite rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
-    >100.0</untitled-ontology-5:quantite>
-    <untitled-ontology-5:etat>en cours</untitled-ontology-5:etat>
-    <untitled-ontology-5:date>30-10-2024</untitled-ontology-5:date>
-    <untitled-ontology-5:lieu>fgggggg</untitled-ontology-5:lieu>
-  </untitled-ontology-5:collecte_dechet>
-  <untitled-ontology-5:collecte_dechet rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#f77eb781-379f-40bf-a3f3-8197f2a695d4">
-    <untitled-ontology-5:lieu>uuuuuuuuuu</untitled-ontology-5:lieu>
-    <untitled-ontology-5:date>30-10-2024</untitled-ontology-5:date>
-    <untitled-ontology-5:etat>en cours</untitled-ontology-5:etat>
-    <untitled-ontology-5:quantite rdf:datatype="http://www.w3.org/2001/XMLSchema#double"
-    >100.0</untitled-ontology-5:quantite>
-  </untitled-ontology-5:collecte_dechet>
   <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#camion_1">
     <untitled-ontology-5:type>s1</untitled-ontology-5:type>
     <untitled-ontology-5:zone_operation>tunis</untitled-ontology-5:zone_operation>
@@ -618,21 +542,21 @@
     </untitled-ontology-5:livreA>
     <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Camion_Benne"/>
   </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagie2">
-    <untitled-ontology-5:nom>RecycleRide</untitled-ontology-5:nom>
-    <untitled-ontology-5:adresse>23 Route Verte, Genève, Suisse</untitled-ontology-5:adresse>
-    <untitled-ontology-5:contact> info@recycleride.ch</untitled-ontology-5:contact>
-    <untitled-ontology-5:possède>
-      <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#vehicule1">
-        <untitled-ontology-5:type>bmw</untitled-ontology-5:type>
-        <untitled-ontology-5:capacite>100</untitled-ontology-5:capacite>
-        <untitled-ontology-5:localisation>localisation vehicule</untitled-ontology-5:localisation>
-        <untitled-ontology-5:description>description</untitled-ontology-5:description>
-        <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Vehicule"/>
-      </owl:NamedIndividual>
-    </untitled-ontology-5:possède>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Compagnie"/>
-  </owl:NamedIndividual>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#9ca31295-9bb0-484e-9f23-eb8173536de2">
+    <untitled-ontology-5:contact></untitled-ontology-5:contact>
+    <untitled-ontology-5:adresse></untitled-ontology-5:adresse>
+    <untitled-ontology-5:nom></untitled-ontology-5:nom>
+  </untitled-ontology-5:Fournisseur>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#6778a03a-05c8-4328-b281-6c49a3e1be79">
+    <untitled-ontology-5:nom>Fournisseur Test</untitled-ontology-5:nom>
+    <untitled-ontology-5:adresse>123 Rue Exemple, Ville Test</untitled-ontology-5:adresse>
+    <untitled-ontology-5:contact>contact@test.com</untitled-ontology-5:contact>
+  </untitled-ontology-5:Fournisseur>
+  <untitled-ontology-5:Vehicule rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#43d57f35-08af-409d-8295-090040631380">
+    <untitled-ontology-5:type>mercedes </untitled-ontology-5:type>
+    <untitled-ontology-5:localisation>ariana</untitled-ontology-5:localisation>
+    <untitled-ontology-5:description>voiture de luxe</untitled-ontology-5:description>
+  </untitled-ontology-5:Vehicule>
   <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#centre_organique_gabes">
     <untitled-ontology-5:capacite>200</untitled-ontology-5:capacite>
     <untitled-ontology-5:localisation>gabes</untitled-ontology-5:localisation>
@@ -640,49 +564,27 @@
     <untitled-ontology-5:utilise rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#methode_de_traitement3"/>
     <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Centre_Recyclage_Organique"/>
   </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#PapierRecycle_Lot_2">
-    <untitled-ontology-5:nom>nomlmmm</untitled-ontology-5:nom>
-    <untitled-ontology-5:date_collecte>21-04-2015</untitled-ontology-5:date_collecte>
-    <untitled-ontology-5:type>ttypeeee</untitled-ontology-5:type>
-    <untitled-ontology-5:poids>500</untitled-ontology-5:poids>
-    <untitled-ontology-5:categorie>catregorie4</untitled-ontology-5:categorie>
-    <untitled-ontology-5:description>desc</untitled-ontology-5:description>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
-  </owl:NamedIndividual>
-  <untitled-ontology-5:Fournisseur_de_Dechet rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#163873f2-60bc-4aef-8eb9-d790fb588df0">
-    <untitled-ontology-5:nom>fournisseur3</untitled-ontology-5:nom>
-    <untitled-ontology-5:adresse>ff</untitled-ontology-5:adresse>
-    <untitled-ontology-5:contact>+216548264</untitled-ontology-5:contact>
-  </untitled-ontology-5:Fournisseur_de_Dechet>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#fournisseur2">
-    <untitled-ontology-5:adresse>adresse2</untitled-ontology-5:adresse>
-    <untitled-ontology-5:contact>+21621152485</untitled-ontology-5:contact>
-    <untitled-ontology-5:nom>fournissuer2</untitled-ontology-5:nom>
-    <untitled-ontology-5:livre_à rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#centre_de_recyclage"/>
->>>>>>> f8e3d6a05398a62be771d4ce3b5b3ff10197e688
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Fournisseur_de_Dechet"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#fournisseur1">
-    <untitled-ontology-5:nom>Ecofournisseur2</untitled-ontology-5:nom>
-<<<<<<< HEAD
-    <untitled-ontology-5:contact>+2162525561 </untitled-ontology-5:contact>
-    <untitled-ontology-5:produit rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#centre_metal__tunis"/>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Fournisseur_de_Dechet"/>
-  </owl:NamedIndividual>
-  <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#PlastiqueRecycle_Lot_1">
-    <untitled-ontology-5:poids>200</untitled-ontology-5:poids>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Materiaux_Recycles"/>
-=======
-    <untitled-ontology-5:adresse>adresse1</untitled-ontology-5:adresse>
-    <untitled-ontology-5:contact>+2162525561 </untitled-ontology-5:contact>
-    <untitled-ontology-5:livre_à rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#centre_de_recyclage"/>
-    <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Fournisseur_de_Dechet"/>
-  </owl:NamedIndividual>
+  <untitled-ontology-5:Fournisseur rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#d2cfc3cc-b685-46f3-a86b-d7b17b2c958e">
+    <untitled-ontology-5:nom>aaa</untitled-ontology-5:nom>
+    <untitled-ontology-5:adresse>aaaa</untitled-ontology-5:adresse>
+    <untitled-ontology-5:contact>aaa</untitled-ontology-5:contact>
+  </untitled-ontology-5:Fournisseur>
   <owl:NamedIndividual rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#semi_1">
     <untitled-ontology-5:capacite>200</untitled-ontology-5:capacite>
     <untitled-ontology-5:zone_operation>monastir sfax sousse</untitled-ontology-5:zone_operation>
     <untitled-ontology-5:type>m2</untitled-ontology-5:type>
     <rdf:type rdf:resource="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#Semi_Remorque"/>
->>>>>>> f8e3d6a05398a62be771d4ce3b5b3ff10197e688
   </owl:NamedIndividual>
+  <untitled-ontology-5:Materiaux_Recycles rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#0f32bf8d-6546-4b2d-8e84-ad0e557d0cef">
+    <untitled-ontology-5:type>bois</untitled-ontology-5:type>
+    <untitled-ontology-5:poids>3.0</untitled-ontology-5:poids>
+    <untitled-ontology-5:nom>bois</untitled-ontology-5:nom>
+    <untitled-ontology-5:description>bois</untitled-ontology-5:description>
+    <untitled-ontology-5:categorie>bois</untitled-ontology-5:categorie>
+  </untitled-ontology-5:Materiaux_Recycles>
+  <untitled-ontology-5:Vehicule rdf:about="http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#e6fcf26c-2b90-4076-a15a-b3a4b93623ef">
+    <untitled-ontology-5:description>ok</untitled-ontology-5:description>
+    <untitled-ontology-5:localisation>ok</untitled-ontology-5:localisation>
+    <untitled-ontology-5:type>ok</untitled-ontology-5:type>
+  </untitled-ontology-5:Vehicule>
 </rdf:RDF>

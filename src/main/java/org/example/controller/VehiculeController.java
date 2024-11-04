@@ -46,4 +46,6 @@ public class VehiculeController {
         vehiculeService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
 }

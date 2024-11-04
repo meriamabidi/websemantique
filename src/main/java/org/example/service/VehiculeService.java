@@ -3,6 +3,7 @@ import org.apache.jena.update.UpdateExecution;
 import org.apache.jena.update.UpdateExecutionFactory;
 import org.apache.jena.update.UpdateFactory;
 import org.apache.jena.update.UpdateRequest;
+import org.example.model.Company;
 import org.example.model.Vehicule;
 import org.springframework.stereotype.Service;
 import org.apache.jena.ontology.Individual;
@@ -85,21 +86,54 @@ public class VehiculeService {
         logger.info("Total vehicules retrieved: " + vehicules.size());
         return vehicules;
     }
-
     public void update(Vehicule vehicule) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + vehicule.getId());
-        if (individual != null) {
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#localisation"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description"));
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String individualUri = baseUri + vehicule.getId();
+        Logger logger = LoggerFactory.getLogger(VehiculeService.class);
 
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type"), vehicule.getType());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#localisation"), vehicule.getLocalisation());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description"), vehicule.getDescription());
+        String sparqlDelete = String.format(
+                "PREFIX ns: <%s> " +
+                        "DELETE { " +
+                        "    <%s> ns:type ?type ; " +
+                        "           ns:localisation ?localisation ; " +
+                        "           ns:description ?description . " +
+                        "} WHERE { " +
+                        "    <%s> ns:type ?type . " +
+                        "    <%s> ns:localisation ?localisation . " +
+                        "    <%s> ns:description ?description . " +
+                        "}",
+                baseUri, individualUri, individualUri, individualUri, individualUri
+        );
+
+        String sparqlInsert = String.format(
+                "PREFIX ns: <%s> " +
+                        "INSERT DATA { " +
+                        "    <%s> ns:type \"%s\" ; " +
+                        "           ns:localisation \"%s\" ; " +
+                        "           ns:description \"%s\" . " +
+                        "}",
+                baseUri, individualUri, vehicule.getType(), vehicule.getLocalisation(), vehicule.getDescription()
+        );
+
+        // Wrap the ontModel in a Dataset
+        Dataset dataset = DatasetFactory.create(ontModel);
+
+        try {
+            UpdateRequest deleteRequest = UpdateFactory.create(sparqlDelete);
+            UpdateExecutionFactory.create(deleteRequest, dataset).execute();
+
+            UpdateRequest insertRequest = UpdateFactory.create(sparqlInsert);
+            UpdateExecutionFactory.create(insertRequest, dataset).execute();
 
             saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error updating Vehicule: ", e);
         }
     }
+
+
+
+
 
     public Optional<Vehicule> findById(String id) {
         String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
@@ -167,21 +201,34 @@ public class VehiculeService {
 
     public void deleteById(String id) {
         String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String individualUri = baseUri + id;
         String sparqlUpdate = String.format(
                 "PREFIX ex: <%s> " +
                         "DELETE WHERE { " +
-                        "    ex:%s ?p ?o . " +
-                        "    ?s ?p2 ex:%s . " +
+                        "    <%s> ?p ?o . " +
                         "}",
-                baseUri, id, id
+                baseUri, individualUri
         );
 
-        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
         try {
-            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, (Dataset) ontModel);
-            qexec.execute();
+            // Create an UpdateRequest from the SPARQL delete query string
+            UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+
+            // Use the existing Model to create a Dataset
+            Dataset dataset = DatasetFactory.create(ontModel);
+
+            // Execute the SPARQL update
+            UpdateExecutionFactory.create(updateRequest, dataset).execute();
+
+            // Optionally log success
+            logger.info("Successfully deleted entity with ID: " + id);
+            logger.info("Attempting to delete entity with ID: " + id);
+
         } catch (Exception e) {
-            logger.error("Error deleting CollectDechet by ID: ", e);
+            logger.error("Error deleting by ID: ", e);
+            logger.info("Attempting to delete entity with ID: " + id);
+
+            throw new RuntimeException("Delete operation failed", e); // Optional: propagate error
         }
     }
 
@@ -200,6 +247,13 @@ public class VehiculeService {
         } catch (Exception e) {
             logger.error("Error saving RDF model: ", e);
         }
+
+
+
+
+
+
+
     }
 
 }

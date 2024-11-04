@@ -1,0 +1,38 @@
+
+h	java:S112ô"FDefine and throw a dedicated exception instead of using a generic one.(¨÷­èıÿÿÿÿ8‘æ¬¨®2
+j
+java:S1192T"HDefine a constant instead of duplicating this literal "contact" 5 times.(¬‘É×üÿÿÿÿ8Ú¾‘¢®2
+s
+java:S1192m"QDefine a constant instead of duplicating this literal "PREFIX ns: <%s> " 3 times.(éßİÔşÿÿÿÿ8ç÷ßª®2
+«
+java:S1192k"ˆDefine a constant instead of duplicating this literal "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" 4 times.(ëÉ ¿ıÿÿÿÿ8ç÷ßª®2
+~
+java:S26291"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(–Á«¹şÿÿÿÿ8ë¾‘¢®2
+~
+java:S2629b"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(Áç¦ÿÿÿÿÿ8í¾‘¢®2
+Z
+java:S2629é"7Use the built-in formatting to construct this argument.(­ğĞùÿÿÿÿ8æ¬¨®2
+Z
+java:S2629ï"7Use the built-in formatting to construct this argument.(œÑÆäıÿÿÿÿ8æ¬¨®2
+T
+java:S2589&"7Remove this expression which always evaluates to "true"(¢õ§˜8îÀ‘¢®2
+^
+java:S1075"ARefactor your code to get this URI from a customizable parameter.(ÛÿØ¼8üÀ‘¢®2
+H
+java:S1874%"+Remove this use of "get"; it is deprecated.(•ù¹é8„Á‘¢®2
+c
+java:S34571"AFormat specifiers should be used instead of string concatenation.(–Á«¹şÿÿÿÿ8’Á‘¢®2
+c
+java:S3457b"AFormat specifiers should be used instead of string concatenation.(Áç¦ÿÿÿÿÿ8ŸÁ‘¢®2
+]
+java:S1117„":Rename "logger" which hides the field declared at line 33.(¼–şşÿÿÿÿ8Ùßı©®2
+d
+java:S3457é"AFormat specifiers should be used instead of string concatenation.(­ğĞùÿÿÿÿ8¢è¬¨®2
+d
+java:S3457ï"AFormat specifiers should be used instead of string concatenation.(œÑÆäıÿÿÿÿ8¥è¬¨®2
+v
+java:S2139ñ"XEither log this exception and handle it, or rethrow it with some contextual information.(”ı¾8¦è¬¨®2
+a
+java:S1128"?Remove this unused import 'org.apache.jena.rdf.model.Resource'.(–’ÿÇûÿÿÿÿ8ÖÁ‘¢®2
+\
+java:S1144ú"?Remove this unused private "mapIndividualToFournisseur" method.(³É¤E8ØÁ‘¢®2

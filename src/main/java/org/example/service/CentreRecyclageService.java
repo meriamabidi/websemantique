@@ -23,7 +23,7 @@ import java.util.*;
 
 @Service
 public class CentreRecyclageService {
-    private static final String RDF_FILE_PATH = "C:/Users/Asus/Desktop/websemantique/rdffile.rdf";
+    private static final String RDF_FILE_PATH = "C:/Users/user/Desktop/websemantique/rdffile.rdf";
     private OntModel ontModel;
 
     private static final Logger logger = LoggerFactory.getLogger(CentreRecyclageService.class);
@@ -115,22 +115,50 @@ public class CentreRecyclageService {
     }
 
 
+    public void update(CentreRecyclage centreRecyclage) {
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String individualUri = baseUri + centreRecyclage.getId();
+        Logger logger = LoggerFactory.getLogger(CentreRecyclageService.class);
 
-    public void update(CentreRecyclage centre) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + centre.getId());
-        if (individual != null) {
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#capacite"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#localisation"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"));
+        String sparqlDelete = String.format(
+                "PREFIX ns: <%s> " +
+                        "DELETE { " +
+                        "    <%s> ns:capacite ?capacite ; " +
+                        "           ns:localisation ?localisation ; " +
+                        "           ns:nom ?nom . " +
+                        "} WHERE { " +
+                        "    <%s> ns:capacite ?capacite . " +
+                        "    <%s> ns:localisation ?localisation . " +
+                        "    <%s> ns:nom ?nom . " +
+                        "}",
+                baseUri, individualUri, individualUri, individualUri, individualUri
+        );
 
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#capacite"), String.valueOf(centre.getCapacite()));
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#localisation"), centre.getLocalisation());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#nom"), centre.getNom());
+        String sparqlInsert = String.format(
+                "PREFIX ns: <%s> " +
+                        "INSERT DATA { " +
+                        "    <%s> ns:capacite \"%d\"^^<http://www.w3.org/2001/XMLSchema#int> ; " +
+                        "           ns:localisation \"%s\" ; " +
+                        "           ns:nom \"%s\" . " +
+                        "}",
+                baseUri, individualUri, centreRecyclage.getCapacite(), centreRecyclage.getLocalisation(), centreRecyclage.getNom()
+        );
+
+        // Wrap the ontModel in a Dataset
+        Dataset dataset = DatasetFactory.create(ontModel);
+
+        try {
+            UpdateRequest deleteRequest = UpdateFactory.create(sparqlDelete);
+            UpdateExecutionFactory.create(deleteRequest, dataset).execute();
+
+            UpdateRequest insertRequest = UpdateFactory.create(sparqlInsert);
+            UpdateExecutionFactory.create(insertRequest, dataset).execute();
 
             saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error updating CentreRecyclage: ", e);
         }
     }
-
     public Optional<CentreRecyclage> findById(String id) {
         String sparqlQueryString = String.format("""
         PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
@@ -166,20 +194,20 @@ public class CentreRecyclageService {
         return Optional.empty();
     }
 
-    public void save(CentreRecyclage centre) {
+    public void save(CentreRecyclage centreRecyclage) {
         String generatedId = UUID.randomUUID().toString();
-        centre.setId(generatedId); // Set the generated ID
+        centreRecyclage.setId(generatedId); // Update this line based on how you want to manage IDs
 
         String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
         String sparqlUpdate = String.format(
                 "PREFIX ns: <%s> " +
                         "INSERT DATA { " +
                         "    ns:%s a ns:Centre_de_Recyclage ; " +
-                        "        ns:capacite \"%s\"^^<http://www.w3.org/2001/XMLSchema#int> ; " +
+                        "        ns:capacite \"%d\"^^<http://www.w3.org/2001/XMLSchema#int> ; " +
                         "        ns:localisation \"%s\" ; " +
                         "        ns:nom \"%s\" . " +
                         "}",
-                baseUri, generatedId, centre.getCapacite(), centre.getLocalisation(), centre.getNom()
+                baseUri, generatedId, centreRecyclage.getCapacite(), centreRecyclage.getLocalisation(), centreRecyclage.getNom()
         );
 
         UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
@@ -189,28 +217,45 @@ public class CentreRecyclageService {
             qexec.execute();
             saveRdfModel();
         } catch (Exception e) {
-            logger.error("Error saving CollectDechet: ", e);
+            logger.error("Error saving CentreRecyclage: ", e);
         }
     }
     public void deleteById(String id) {
         String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String individualUri = baseUri + id;
+
+        // Requête SPARQL pour supprimer toutes les propriétés liées à l'individu
         String sparqlUpdate = String.format(
                 "PREFIX ex: <%s> " +
                         "DELETE WHERE { " +
-                        "    ex:%s ?p ?o . " +
-                        "    ?s ?p2 ex:%s . " +
+                        "    <%s> ?p ?o . " +
                         "}",
-                baseUri, id, id
+                baseUri, individualUri
         );
 
-        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
         try {
-            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, (Dataset) ontModel);
-            qexec.execute();
+            // Création de la requête de mise à jour SPARQL
+            UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+
+            // Utilisation du modèle pour créer un Dataset
+            Dataset dataset = DatasetFactory.create(ontModel);
+
+            // Logs de débogage
+            logger.info("Tentative de suppression de la Company avec l'ID : " + id);
+
+            // Exécution de la requête de suppression
+            UpdateExecutionFactory.create(updateRequest, dataset).execute();
+
+            // Log de confirmation de suppression
+            logger.info("Suppression réussie de la Company avec l'ID : " + id);
+
         } catch (Exception e) {
-            logger.error("Error deleting CollectDechet by ID: ", e);
+            // Log d'erreur et propagation de l'exception si nécessaire
+            logger.error("Erreur lors de la suppression de la Company avec l'ID : " + id, e);
+            throw new RuntimeException("L'opération de suppression a échoué", e);
         }
     }
+
 
     private CentreRecyclage mapIndividualToCentre(Individual ind) {
         CentreRecyclage centre = new CentreRecyclage();

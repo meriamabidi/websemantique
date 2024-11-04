@@ -97,24 +97,53 @@ public class DechetService {
         logger.info("Total dechets retrieved: " + dechets.size());
         return dechets;
     }
-
     public void update(Dechet dechet) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + dechet.getId());
-        if (individual != null) {
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#poids"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dateCollecte"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description"));
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String individualUri = baseUri + dechet.getId();
+        Logger logger = LoggerFactory.getLogger(DechetService.class);
 
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#type"), dechet.getType());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#poids"), String.valueOf(dechet.getPoids()));
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#dateCollecte"), dechet.getDateCollecte().toString());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#description"), dechet.getDescription());
+        String sparqlDelete = String.format(
+                "PREFIX ns: <%s> " +
+                        "DELETE { " +
+                        "    <%s> ns:type ?type ; " +
+                        "           ns:poids ?poids ; " +
+                        "           ns:dateCollecte ?dateCollecte ; " +
+                        "           ns:description ?description . " +
+                        "} WHERE { " +
+                        "    <%s> ns:type ?type . " +
+                        "    <%s> ns:poids ?poids . " +
+                        "    <%s> ns:dateCollecte ?dateCollecte . " +
+                        "    <%s> ns:description ?description . " +
+                        "}",
+                baseUri, individualUri, individualUri, individualUri, individualUri, individualUri
+        );
+
+        String sparqlInsert = String.format(
+                "PREFIX ns: <%s> " +
+                        "INSERT DATA { " +
+                        "    <%s> ns:type \"%s\" ; " +
+                        "           ns:poids \"%s\"^^<http://www.w3.org/2001/XMLSchema#double> ; " +
+                        "           ns:dateCollecte \"%s\"^^<http://www.w3.org/2001/XMLSchema#date> ; " +
+                        "           ns:description \"%s\" . " +
+                        "}",
+                baseUri, individualUri, dechet.getType(), dechet.getPoids(), dechet.getDateCollecte(), dechet.getDescription()
+        );
+
+        // Wrap the ontModel in a Dataset
+        Dataset dataset = DatasetFactory.create(ontModel);
+
+        try {
+            UpdateRequest deleteRequest = UpdateFactory.create(sparqlDelete);
+            UpdateExecutionFactory.create(deleteRequest, dataset).execute();
+
+            UpdateRequest insertRequest = UpdateFactory.create(sparqlInsert);
+            UpdateExecutionFactory.create(insertRequest, dataset).execute();
 
             saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error updating Dechet: ", e);
         }
     }
-
     public Optional<Dechet> findById(String id) {
         String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
         String sparqlQuery = String.format(
@@ -175,7 +204,8 @@ public class DechetService {
 
         UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
         try {
-            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, (Dataset) ontModel);
+            Dataset dataset = DatasetFactory.create(ontModel);
+            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, dataset);
             qexec.execute();
             saveRdfModel();
         } catch (Exception e) {
@@ -184,25 +214,41 @@ public class DechetService {
     }
     public void deleteById(String id) {
         String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String individualUri = baseUri + id;
+
+        // Requête SPARQL pour supprimer toutes les propriétés liées à l'individu
         String sparqlUpdate = String.format(
                 "PREFIX ex: <%s> " +
                         "DELETE WHERE { " +
-                        "    ex:%s ?p ?o . " +
-                        "    ?s ?p2 ex:%s . " +
+                        "    <%s> ?p ?o . " +
                         "}",
-                baseUri, id, id
+                baseUri, individualUri
         );
 
-        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
         try {
+            // Création de la requête de mise à jour SPARQL
+            UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+
+            // Utilisation du modèle pour créer un Dataset
             Dataset dataset = DatasetFactory.create(ontModel);
-            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, dataset);
-            qexec.execute();
-            saveRdfModel();
+
+            // Logs de débogage
+            logger.info("Tentative de suppression de la Company avec l'ID : " + id);
+
+            // Exécution de la requête de suppression
+            UpdateExecutionFactory.create(updateRequest, dataset).execute();
+
+            // Log de confirmation de suppression
+            logger.info("Suppression réussie de la Company avec l'ID : " + id);
+
         } catch (Exception e) {
-            logger.error("Error saving CollectDechet: ", e);
+            // Log d'erreur et propagation de l'exception si nécessaire
+            logger.error("Erreur lors de la suppression de la Company avec l'ID : " + id, e);
+            throw new RuntimeException("L'opération de suppression a échoué", e);
         }
     }
+
+
 
 
     private Dechet mapIndividualToDechet(Individual ind) {

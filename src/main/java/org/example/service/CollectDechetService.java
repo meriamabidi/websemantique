@@ -93,23 +93,53 @@ public class CollectDechetService {
         return collectes;
     }
 
-    public void update(CollectDechet collecte) {
-        Individual individual = ontModel.getIndividual("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" + collecte.getId());
-        if (individual != null) {
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#etat"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date"));
-            individual.removeAll(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#lieu"));
+    public void update(CollectDechet collectDechet) {
+        String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String individualUri = baseUri + collectDechet.getId();
+        Logger logger = LoggerFactory.getLogger(CollectDechetService.class);
 
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#quantite"), String.valueOf(collecte.getQuantite()));
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#etat"), collecte.getEtat());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#date"), collecte.getDate().toString());
-            individual.addProperty(ontModel.getProperty("http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#lieu"), collecte.getLieu());
+        String sparqlDelete = String.format(
+                "PREFIX ns: <%s> " +
+                        "DELETE { " +
+                        "    <%s> ns:quantite ?quantite ; " +
+                        "           ns:etat ?etat ; " +
+                        "           ns:date ?date ; " +
+                        "           ns:lieu ?lieu . " +
+                        "} WHERE { " +
+                        "    <%s> ns:quantite ?quantite . " +
+                        "    <%s> ns:etat ?etat . " +
+                        "    <%s> ns:date ?date . " +
+                        "    <%s> ns:lieu ?lieu . " +
+                        "}",
+                baseUri, individualUri, individualUri, individualUri, individualUri, individualUri
+        );
+
+        String sparqlInsert = String.format(
+                "PREFIX ns: <%s> " +
+                        "INSERT DATA { " +
+                        "    <%s> ns:quantite \"%s\"^^<http://www.w3.org/2001/XMLSchema#double> ; " +
+                        "           ns:etat \"%s\" ; " +
+                        "           ns:date \"%s\" ; " +
+                        "           ns:lieu \"%s\" . " +
+                        "}",
+                baseUri, individualUri, collectDechet.getQuantite(), collectDechet.getEtat(), collectDechet.getDate(), collectDechet.getLieu()
+        );
+
+        // Wrap the ontModel in a Dataset
+        Dataset dataset = DatasetFactory.create(ontModel);
+
+        try {
+            UpdateRequest deleteRequest = UpdateFactory.create(sparqlDelete);
+            UpdateExecutionFactory.create(deleteRequest, dataset).execute();
+
+            UpdateRequest insertRequest = UpdateFactory.create(sparqlInsert);
+            UpdateExecutionFactory.create(insertRequest, dataset).execute();
 
             saveRdfModel();
+        } catch (Exception e) {
+            logger.error("Error updating CollectDechet: ", e);
         }
     }
-
     public Optional<CollectDechet> findById(String id) {
         String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
         String sparqlQuery = String.format(
@@ -180,21 +210,37 @@ public class CollectDechetService {
     }
     public void deleteById(String id) {
         String baseUri = "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#";
+        String individualUri = baseUri + id;
+
+        // Requête SPARQL pour supprimer toutes les propriétés liées à l'individu
         String sparqlUpdate = String.format(
                 "PREFIX ex: <%s> " +
                         "DELETE WHERE { " +
-                        "    ex:%s ?p ?o . " +
-                        "    ?s ?p2 ex:%s . " +
+                        "    <%s> ?p ?o . " +
                         "}",
-                baseUri, id, id
+                baseUri, individualUri
         );
 
-        UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
         try {
-            UpdateExecution qexec = UpdateExecutionFactory.create(updateRequest, (Dataset) ontModel);
-            qexec.execute();
+            // Création de la requête de mise à jour SPARQL
+            UpdateRequest updateRequest = UpdateFactory.create(sparqlUpdate);
+
+            // Utilisation du modèle pour créer un Dataset
+            Dataset dataset = DatasetFactory.create(ontModel);
+
+            // Logs de débogage
+            logger.info("Tentative de suppression de la Company avec l'ID : " + id);
+
+            // Exécution de la requête de suppression
+            UpdateExecutionFactory.create(updateRequest, dataset).execute();
+
+            // Log de confirmation de suppression
+            logger.info("Suppression réussie de la Company avec l'ID : " + id);
+
         } catch (Exception e) {
-            logger.error("Error deleting CollectDechet by ID: ", e);
+            // Log d'erreur et propagation de l'exception si nécessaire
+            logger.error("Erreur lors de la suppression de la Company avec l'ID : " + id, e);
+            throw new RuntimeException("L'opération de suppression a échoué", e);
         }
     }
 
@@ -216,4 +262,63 @@ public class CollectDechetService {
         } catch (Exception e) {
             logger.error("Error saving RDF model: ", e);
         }
-    }}
+    }
+
+    public List<CollectDechet> searchCollectDechets(String keyword) {
+        List<CollectDechet> collectDechets = new ArrayList<>();
+        Map<String, CollectDechet> collectDechetMap = new HashMap<>();
+
+        String sparqlQueryString = """
+        PREFIX ns: <http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#>
+        SELECT ?collectDechet ?quantite ?etat ?date ?lieu WHERE {
+            ?collectDechet a ns:CollectDechet .
+            OPTIONAL { ?collectDechet ns:quantite ?quantite . }
+            OPTIONAL { ?collectDechet ns:etat ?etat . }
+            OPTIONAL { ?collectDechet ns:date ?date . }
+            OPTIONAL { ?collectDechet ns:lieu ?lieu . }
+            FILTER(CONTAINS(LCASE(?etat), LCASE(?keyword)) || CONTAINS(LCASE(?lieu), LCASE(?keyword)))
+        }
+    """;
+
+        Query query = QueryFactory.create(sparqlQueryString.replace("?keyword", "\"" + keyword + "\""));
+
+        try (QueryExecution qexec = QueryExecutionFactory.create(query, ontModel)) {
+            ResultSet results = qexec.execSelect();
+            while (results.hasNext()) {
+                QuerySolution soln = results.nextSolution();
+                String collectDechetUri = soln.get("collectDechet").toString();
+                String idValue = collectDechetUri.contains("#") ? collectDechetUri.substring(collectDechetUri.lastIndexOf('#') + 1)
+                        : collectDechetUri.substring(collectDechetUri.lastIndexOf('/') + 1);
+
+                CollectDechet collectDechet = collectDechetMap.getOrDefault(collectDechetUri, new CollectDechet());
+                collectDechet.setId(idValue);
+
+                if (soln.contains("quantite")) {
+                    collectDechet.setQuantite(soln.get("quantite").asLiteral().getDouble());
+                }
+                if (soln.contains("etat")) {
+                    collectDechet.setEtat(soln.get("etat").toString());
+                }
+                if (soln.contains("date")) {
+                    collectDechet.setDate(soln.get("date").toString());
+                }
+                if (soln.contains("lieu")) {
+                    collectDechet.setLieu(soln.get("lieu").toString());
+                }
+
+                collectDechetMap.put(collectDechetUri, collectDechet);
+            }
+        } catch (Exception e) {
+            logger.error("Error retrieving collectDechets: ", e);
+        }
+
+        collectDechets.addAll(collectDechetMap.values());
+        logger.info("Total collectDechets found for keyword '" + keyword + "': " + collectDechets.size());
+        return collectDechets;
+    }
+
+
+
+
+}
+

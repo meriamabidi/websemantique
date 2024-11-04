@@ -1,0 +1,60 @@
+
+h	java:S112ÿ"FDefine and throw a dedicated exception instead of using a generic one.(¨÷­èıÿÿÿÿ8ü¢«¨®2
+k
+java:S1192N"IDefine a constant instead of duplicating this literal "capacite" 5 times.(¢¯¡íøÿÿÿÿ8Ÿî ¤®2
+j
+java:S1192U"MDefine a constant instead of duplicating this literal "localisation" 5 times.(É×Æ˜8 î ¤®2
+s
+java:S1192|"QDefine a constant instead of duplicating this literal "PREFIX ns: <%s> " 3 times.(éßİÔşÿÿÿÿ8Æ‰‚ª®2
+«
+java:S1192w"ˆDefine a constant instead of duplicating this literal "http://www.semanticweb.org/basou/ontologies/2024/9/untitled-ontology-5#" 3 times.(ëÉ ¿ıÿÿÿÿ8Æ‰‚ª®2
+T
+java:S2629K"7Use the built-in formatting to construct this argument.(òÔçö8§î ¤®2
+Y
+java:S2629R"7Use the built-in formatting to construct this argument.(ŸÙĞ°ûÿÿÿÿ8¨î ¤®2
+Y
+java:S2629Y"7Use the built-in formatting to construct this argument.(Èİø¢ùÿÿÿÿ8¨î ¤®2
+Y
+java:S2629`"7Use the built-in formatting to construct this argument.(º³¯úÿÿÿÿ8ªî ¤®2
+y
+java:S2629j"\Invoke method(s) only conditionally. Use the built-in formatting to construct this argument.(íÿİø8«î ¤®2
+Z
+java:S2629ô"7Use the built-in formatting to construct this argument.(­ğĞùÿÿÿÿ8£«¨®2
+Z
+java:S2629ú"7Use the built-in formatting to construct this argument.(œÑÆäıÿÿÿÿ8£«¨®2
+T
+java:S2589&"7Remove this expression which always evaluates to "true"(¢õ§˜8ñğ ¤®2
+^
+java:S1075"ARefactor your code to get this URI from a customizable parameter.(ÛÿØ¼8’ ‘¢®2
+H
+java:S1874%"+Remove this use of "get"; it is deprecated.(•ù¹é8‚ñ ¤®2
+o
+java:S3776*"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(ù¶Ò¸8„ñ ¤®2
+^
+java:S3457K"AFormat specifiers should be used instead of string concatenation.(òÔçö8•ñ ¤®2
+^
+java:S3457P"AFormat specifiers should be used instead of string concatenation.(Õ½°÷8˜ñ ¤®2
+c
+java:S3457R"AFormat specifiers should be used instead of string concatenation.(ŸÙĞ°ûÿÿÿÿ8šñ ¤®2
+c
+java:S3457W"AFormat specifiers should be used instead of string concatenation.(Ä¢ÿŸüÿÿÿÿ8ñ ¤®2
+c
+java:S3457Y"AFormat specifiers should be used instead of string concatenation.(Èİø¢ùÿÿÿÿ8Ÿñ ¤®2
+c
+java:S3457^"AFormat specifiers should be used instead of string concatenation.(ÚĞŸàûÿÿÿÿ8¢ñ ¤®2
+c
+java:S3457`"AFormat specifiers should be used instead of string concatenation.(º³¯úÿÿÿÿ8£ñ ¤®2
+^
+java:S3457j"AFormat specifiers should be used instead of string concatenation.(íÿİø8§ñ ¤®2
+c
+java:S3457n"AFormat specifiers should be used instead of string concatenation.(·îéìùÿÿÿÿ8©ñ ¤®2
+V
+java:S1117y":Rename "logger" which hides the field declared at line 29.(ÄÌ±;8‘‹‚ª®2
+d
+java:S3457ô"AFormat specifiers should be used instead of string concatenation.(­ğĞùÿÿÿÿ8¹¨«¨®2
+d
+java:S3457ú"AFormat specifiers should be used instead of string concatenation.(œÑÆäıÿÿÿÿ8»¨«¨®2
+v
+java:S2139ü"XEither log this exception and handle it, or rethrow it with some contextual information.(”ı¾8»¨«¨®2
+X
+java:S1144„":Remove this unused private "mapIndividualToCentre" method.(Ìıè±8²ó ¤®2
